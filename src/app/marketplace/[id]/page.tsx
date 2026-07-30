@@ -82,10 +82,13 @@ export default function OpportunityDetailPage() {
     );
   }
 
-  const { score, impact, ewa } = computed;
+  const { score, impact, ewa, basePlan } = computed;
   const hours = hoursLabel(opp);
   const isJob = opp.type === "job";
   const surplus = isJob && opp.weeklyNetCad != null ? jobMonthlySurplus(financials, opp.weeklyNetCad) : null;
+  const payoutDate = opportunityPayoutDate(opp, demoToday);
+  const paysAfterGoal =
+    basePlan.goal != null && payoutDate > basePlan.goal.byDate;
 
   return (
     <div className="space-y-4">
@@ -160,6 +163,42 @@ export default function OpportunityDetailPage() {
             <p className="mt-2 text-xs text-zinc-500">No weekly income estimate available.</p>
           )}
         </div>
+      ) : basePlan.goal ? (
+        <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+          <h2 className="text-sm font-semibold text-zinc-200">Before / after</h2>
+          <p className="mt-2 text-sm text-zinc-300">
+            Toward your {fmtMoney(basePlan.goal.amountCad)} by {fmtDate(basePlan.goal.byDate)}:{" "}
+            {impact.gapAfterCad === 0 ? (
+              <span className="font-semibold text-emerald-400">
+                {fmtMoney(impact.gapBeforeCad)} short → goal met
+              </span>
+            ) : (
+              <span className="font-semibold tabular-nums">
+                <span className={impact.gapBeforeCad > 0 ? "text-amber-400" : "text-zinc-100"}>
+                  {fmtMoney(impact.gapBeforeCad)} short
+                </span>
+                {" → "}
+                <span className={impact.gapAfterCad > 0 ? "text-amber-400" : "text-emerald-400"}>
+                  {fmtMoney(impact.gapAfterCad)} short
+                </span>
+              </span>
+            )}
+          </p>
+          {paysAfterGoal ? (
+            <p className="mt-2 text-xs font-medium text-amber-300">
+              Pays out {fmtDate(payoutDate)} — after your goal date
+            </p>
+          ) : null}
+          <div className="mt-3 space-y-1 text-xs text-zinc-400">
+            {impact.closesGap ? (
+              <p className="font-medium text-emerald-400">Closes your goal completely.</p>
+            ) : null}
+            <p>
+              Pays on {fmtDate(payoutDate)}
+              {opp.payoutDaysAfter === 0 ? " (same day)" : ""}
+            </p>
+          </div>
+        </div>
       ) : (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
           <h2 className="text-sm font-semibold text-zinc-200">Before / after</h2>
@@ -191,7 +230,7 @@ export default function OpportunityDetailPage() {
             ) : null}
             <p>
               +<span className="tabular-nums">{impact.bufferDaysGained}</span> buffer days ·
-              pays on {fmtDate(opportunityPayoutDate(opp, demoToday))}
+              pays on {fmtDate(payoutDate)}
               {opp.payoutDaysAfter === 0 ? " (same day)" : ""}
             </p>
           </div>

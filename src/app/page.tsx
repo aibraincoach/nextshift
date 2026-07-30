@@ -4,6 +4,8 @@ import { AdvanceVsShift } from "@/components/dashboard/AdvanceVsShift";
 import { BudgetSummary } from "@/components/dashboard/BudgetSummary";
 import { CashGapHero } from "@/components/dashboard/CashGapHero";
 import { CloseThisGap } from "@/components/dashboard/CloseThisGap";
+import { DailyShortfalls } from "@/components/dashboard/DailyShortfalls";
+import { GoalSetter } from "@/components/dashboard/GoalSetter";
 import { EmptyWorker, ErrorPlan, LoadingPlan } from "@/components/dashboard/PageStatus";
 import { RunwayChart } from "@/components/dashboard/RunwayChart";
 import { UpcomingObligations } from "@/components/dashboard/UpcomingObligations";
@@ -41,9 +43,18 @@ export default function DashboardPage() {
         <DemoResetButton />
       </div>
 
+      <GoalSetter
+        workerId={worker.workerId}
+        financials={financials}
+        demoToday={demoToday}
+        planOptions={planOptions}
+      />
+
       <BudgetSummary plan={plan} dailySpendCad={dailySpendCad} />
 
       <CashGapHero plan={plan} />
+
+      <DailyShortfalls plan={plan} />
 
       <RunwayChart projection={plan.projection} bufferTargetCad={plan.bufferTargetCad} />
 
@@ -55,7 +66,7 @@ export default function DashboardPage() {
         demoToday={demoToday}
         opportunities={opportunities}
         planOptions={planOptions}
-        gapCad={plan.cashGapCad}
+        plan={plan}
       />
 
       <AdvanceVsShift

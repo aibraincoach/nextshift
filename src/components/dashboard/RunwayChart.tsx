@@ -28,7 +28,7 @@ export function RunwayChart({
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
       <div className="mb-2 flex items-baseline justify-between">
-        <h2 className="text-sm font-semibold text-zinc-200">7-day runway</h2>
+        <h2 className="text-sm font-semibold text-zinc-200">{projection.length}-day runway</h2>
         <span className="text-[11px] text-zinc-500">
           Buffer {fmtMoney(bufferTargetCad)}
         </span>

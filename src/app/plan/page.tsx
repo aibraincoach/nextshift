@@ -25,6 +25,7 @@ export default function PlanPage() {
   }
 
   const plan = buildCashPlan(financials, demoToday, planOptions);
+  const lastDay = plan.projection[plan.projection.length - 1]?.date ?? demoToday;
 
   return (
     <div className="space-y-5">
@@ -34,24 +35,52 @@ export default function PlanPage() {
       </div>
 
       <div>
-        <h1 className="text-xl font-bold text-zinc-50">Your 7-day plan</h1>
-        <p className="mt-1 text-sm text-zinc-400">
-          Projected cash day by day from {fmtDate(demoToday)}.
-        </p>
-        {plan.cashGapCad > 0 && plan.gapDate ? (
-          <p className="mt-2 text-sm font-semibold text-amber-300">
-            You come up {fmtMoney(plan.cashGapCad)} short on {fmtDate(plan.gapDate)}.
-          </p>
+        <h1 className="text-xl font-bold text-zinc-50">
+          {plan.goal ? "Your cash plan" : "Your 7-day plan"}
+        </h1>
+        {plan.goal ? (
+          <>
+            <p className="mt-2 text-base font-semibold text-zinc-100">
+              Goal: {fmtMoney(plan.goal.amountCad)} by {fmtDate(plan.goal.byDate)}
+            </p>
+            {plan.goal.onTrack ? (
+              <p className="mt-1 text-sm font-semibold text-emerald-400">
+                On track — projected {fmtMoney(plan.goal.projectedBalanceCad)}
+              </p>
+            ) : (
+              <p className="mt-1 text-sm font-semibold text-amber-300">
+                Short {fmtMoney(plan.goal.shortfallCad)}
+              </p>
+            )}
+            <p className="mt-1 text-sm text-zinc-400">
+              Projected cash day by day from {fmtDate(demoToday)} through {fmtDate(lastDay)}.
+            </p>
+          </>
         ) : (
-          <p className="mt-2 text-sm font-semibold text-emerald-400">
-            You&apos;re covered through{" "}
-            {fmtDate(plan.projection[plan.projection.length - 1]?.date ?? demoToday)}.
-          </p>
+          <>
+            <p className="mt-1 text-sm text-zinc-400">
+              Projected cash day by day from {fmtDate(demoToday)}.
+            </p>
+            {plan.cashGapCad > 0 && plan.gapDate ? (
+              <p className="mt-2 text-sm font-semibold text-amber-300">
+                You come up {fmtMoney(plan.cashGapCad)} short on {fmtDate(plan.gapDate)}.
+              </p>
+            ) : (
+              <p className="mt-2 text-sm font-semibold text-emerald-400">
+                You&apos;re covered through {fmtDate(lastDay)}.
+              </p>
+            )}
+          </>
         )}
-        <div className="mt-2 flex items-center gap-3 text-sm">
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
           <Link href="/needs" className="text-zinc-300 underline hover:text-zinc-100">
             Edit needs
           </Link>
+          {!plan.goal && (
+            <Link href="/" className="text-zinc-300 underline hover:text-zinc-100">
+              Set a goal
+            </Link>
+          )}
           {plan.cashGapCad > 0 && (
             <Link href="/marketplace" className="text-amber-300 underline hover:text-amber-200">
               Close this gap
@@ -75,15 +104,25 @@ export default function PlanPage() {
             <tbody>
               {plan.projection.map((day) => {
                 const below = day.endingBalanceCad < plan.bufferTargetCad;
+                const isGoalDay = plan.goal?.byDate === day.date;
                 return (
                   <tr
                     key={day.date}
                     className={`border-b border-zinc-800/80 last:border-0 ${
-                      below ? "border-l-4 border-l-amber-500 bg-amber-500/10" : ""
+                      isGoalDay
+                        ? "border-l-4 border-l-emerald-500 bg-emerald-500/5"
+                        : below
+                          ? "border-l-4 border-l-amber-500 bg-amber-500/10"
+                          : ""
                     }`}
                   >
                     <td className="px-3 py-2.5 text-zinc-200">
                       {fmtDate(day.date)}
+                      {isGoalDay && (
+                        <span className="ml-2 inline-block rounded-full border border-emerald-600/60 bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
+                          goal day
+                        </span>
+                      )}
                       {below && (
                         <span className="ml-2 inline-block rounded-full bg-amber-500/20 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-amber-300">
                           short {fmtMoney(plan.bufferTargetCad - day.endingBalanceCad)}
@@ -146,7 +185,9 @@ export default function PlanPage() {
             </Link>
           </p>
         ) : (
-          <p className="mt-3 text-sm text-emerald-400">All seven days stay above your buffer.</p>
+          <p className="mt-3 text-sm text-emerald-400">
+            All projected days stay above your buffer.
+          </p>
         )}
       </section>
 

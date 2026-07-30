@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { Opportunity, Worker, WorkerFinancials } from "@/types";
+import type { CashPlan, Opportunity, Worker, WorkerFinancials } from "@/types";
 import { scoreOpportunity } from "@/lib/engine/match";
 import {
   fmtDate,
@@ -18,16 +18,17 @@ export function CloseThisGap({
   demoToday,
   opportunities,
   planOptions,
-  gapCad,
+  plan,
 }: {
   worker: Worker;
   financials: WorkerFinancials;
   demoToday: string;
   opportunities: Opportunity[];
   planOptions: PlanOptions;
-  gapCad: number;
+  plan: CashPlan;
 }) {
   const { state } = useDemoState();
+  const gapCad = plan.cashGapCad;
 
   if (gapCad <= 0) return null;
 
@@ -45,7 +46,11 @@ export function CloseThisGap({
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold text-zinc-200">Close this gap</h2>
+        <h2 className="text-sm font-semibold text-zinc-200">
+          {plan.goal
+            ? `Close your ${fmtMoney(plan.goal.shortfallCad)} gap by ${fmtDate(plan.goal.byDate)}`
+            : "Close this gap"}
+        </h2>
         <Link
           href="/marketplace"
           className="text-xs font-medium text-emerald-400 hover:text-emerald-300"
@@ -54,7 +59,9 @@ export function CloseThisGap({
         </Link>
       </div>
       <p className="mt-1 text-xs text-zinc-500">
-        Matched shifts and jobs that reduce your {fmtMoney(gapCad)} shortfall
+        {plan.goal
+          ? "Matched shifts and jobs that move you toward your goal"
+          : `Matched shifts and jobs that reduce your ${fmtMoney(gapCad)} shortfall`}
       </p>
 
       {ranked.length === 0 ? (

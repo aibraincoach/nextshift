@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useAppData } from "@/lib/data/useAppData";
 import { useDemoState } from "@/lib/storage/demoState";
 import { scoreOpportunity } from "@/lib/engine/match";
-import { buildCashPlan, opportunityImpact } from "@/lib/engine/plan";
+import { buildCashPlan, fmtDate, fmtMoney, opportunityImpact } from "@/lib/engine/plan";
 import { OpportunityCard } from "@/components/marketplace/OpportunityCard";
 import { WorkerSwitcher } from "@/components/shared/WorkerSwitcher";
 import type { Opportunity } from "@/types";
@@ -27,10 +27,13 @@ export default function MarketplacePage() {
   const { state } = useDemoState();
   const [tab, setTab] = useState<Opportunity["type"]>("shift");
 
-  const gapDate = useMemo(
-    () => (financials ? buildCashPlan(financials, demoToday, planOptions).gapDate : null),
+  const plan = useMemo(
+    () => (financials ? buildCashPlan(financials, demoToday, planOptions) : null),
     [financials, demoToday, planOptions]
   );
+  const gapDate = plan?.gapDate ?? null;
+  const goalShortfallCad =
+    plan?.goal && plan.goal.shortfallCad > 0 ? plan.goal.shortfallCad : undefined;
 
   const scored = useMemo(() => {
     if (!worker || !financials) return [];
@@ -67,6 +70,13 @@ export default function MarketplacePage() {
 
       <WorkerSwitcher />
 
+      {plan?.goal && plan.goal.shortfallCad > 0 ? (
+        <p className="rounded-lg border border-amber-800/50 bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-200">
+          You need {fmtMoney(plan.goal.shortfallCad)} by {fmtDate(plan.goal.byDate)} — showing work
+          that pays out in time.
+        </p>
+      ) : null}
+
       <div className="flex rounded-xl border border-zinc-800 bg-zinc-900/60 p-1">
         {TABS.map((t) => (
           <button
@@ -94,6 +104,7 @@ export default function MarketplacePage() {
               demoToday={demoToday}
               claimed={claimed}
               gapDate={gapDate}
+              goalShortfallCad={goalShortfallCad}
             />
           ))}
         </div>
