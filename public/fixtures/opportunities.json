@@ -18,6 +18,38 @@
       "note": "Evening pick-and-pack shift, same-day payout."
     },
     {
+      "id": "OP-017",
+      "type": "shift",
+      "employerId": "EMP-914",
+      "employerName": "Peace Bridge Couriers",
+      "role": "Evening delivery block (urgent)",
+      "city": "Calgary",
+      "dayOffset": 0,
+      "startHour": 18,
+      "endHour": 23,
+      "hourlyRateCad": 28,
+      "estimatedNetCad": 182,
+      "requiredOccupations": ["Gig delivery driver", "Rideshare driver"],
+      "payoutDaysAfter": 0,
+      "note": "Short-notice surge block tonight, instant payout."
+    },
+    {
+      "id": "OP-018",
+      "type": "shift",
+      "employerId": "EMP-903",
+      "employerName": "Prairie Clean Co",
+      "role": "Post-event deep clean (tonight)",
+      "city": "Calgary",
+      "dayOffset": 0,
+      "startHour": 21,
+      "endHour": 29,
+      "hourlyRateCad": 26,
+      "estimatedNetCad": 171,
+      "requiredOccupations": ["Cleaning / janitorial", "Hotel housekeeping", "Event / venue staff"],
+      "payoutDaysAfter": 0,
+      "note": "Overnight arena cleanup after tonight's event, same-day pay."
+    },
+    {
       "id": "OP-002",
       "type": "shift",
       "employerId": "EMP-902",
