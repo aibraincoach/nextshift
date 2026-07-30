@@ -101,6 +101,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       })),
       removedIncome: releasedIncome,
       savingsRate: state.savingsRate,
+      needs: selectedId ? state.needsByWorker[selectedId] : undefined,
     };
 
     return {
