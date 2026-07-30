@@ -89,6 +89,11 @@ export interface NeedsSettings {
   dailySpendCad?: number;
   /** Obligation IDs the user has toggled off (paused/not mine). */
   excludedObligationIds?: string[];
+  /** Override for expected daily net income, CAD (history only prefills). */
+  expectedDailyNetCad?: number;
+  /** The user's stated goal: "I need $X by DATE". */
+  goalAmountCad?: number;
+  goalByDate?: string; // ISO date
 }
 
 export function buildCashPlan(
@@ -96,8 +101,13 @@ export function buildCashPlan(
   demoToday: string,
   opts: PlanOptions = {}
 ): CashPlan {
-  const horizon = opts.horizonDays ?? 7;
   const needs = opts.needs ?? {};
+  const goalActive = needs.goalAmountCad != null && needs.goalAmountCad > 0 && !!needs.goalByDate;
+  // Extend the horizon to cover the goal date so the goal is always evaluated.
+  const goalDays = goalActive
+    ? Math.max(1, Math.round((new Date(needs.goalByDate! + "T12:00:00").getTime() - new Date(demoToday + "T12:00:00").getTime()) / 86400000) + 1)
+    : 0;
+  const horizon = Math.max(opts.horizonDays ?? 7, goalDays);
   const dailySpend =
     needs.dailySpendCad != null && needs.dailySpendCad >= 0
       ? needs.dailySpendCad
@@ -131,7 +141,7 @@ export function buildCashPlan(
     const date = addDays(demoToday, i);
     // Conservative baseline: expected daily net scaled down for volatility is
     // already averaged over worked and unworked days in the last 28 days.
-    const baseEarn = fin.expectedDailyNetCad * (1 - savingsRate);
+    const baseEarn = (needs.expectedDailyNetCad ?? fin.expectedDailyNetCad) * (1 - savingsRate);
     const extra = extraByDate.get(date) ?? 0;
     const dayObls = dueDates.filter((o) => o.date === date);
     const oblTotal = dayObls.reduce((s, o) => s + o.amountCad, 0);
@@ -152,14 +162,46 @@ export function buildCashPlan(
   }
 
   if (!Number.isFinite(lowest)) lowest = balance;
-  const cashGapCad = Math.max(0, Math.round((bufferTargetCad - lowest) * 100) / 100);
-  const gapDate = cashGapCad > 0 ? lowestDate : null;
+  const bufferGapCad = Math.max(0, Math.round((bufferTargetCad - lowest) * 100) / 100);
+
+  // User goal: "I need $X available by DATE". Shortfall is measured against
+  // the projected balance on that date. When a goal is set it becomes the
+  // primary gap so matching and impacts optimize for what the user asked.
+  let goal: CashPlan["goal"];
+  if (goalActive) {
+    const goalDay = projection.find((p) => p.date === needs.goalByDate) ?? projection[projection.length - 1];
+    const shortfall = Math.max(0, Math.round((needs.goalAmountCad! - goalDay.endingBalanceCad) * 100) / 100);
+    goal = {
+      amountCad: needs.goalAmountCad!,
+      byDate: needs.goalByDate!,
+      projectedBalanceCad: goalDay.endingBalanceCad,
+      shortfallCad: shortfall,
+      onTrack: shortfall === 0,
+    };
+  }
+
+  const cashGapCad = goal ? goal.shortfallCad : bufferGapCad;
+  const gapDate = goal
+    ? goal.shortfallCad > 0
+      ? goal.byDate
+      : null
+    : bufferGapCad > 0
+      ? lowestDate
+      : null;
 
   // Safe to save today: what can be set aside while every projected day stays
   // at or above the buffer target.
   const headroom = lowest - bufferTargetCad;
   const safeToSaveTodayCad =
-    headroom > 0 ? Math.max(0, Math.min(Math.round(headroom * 0.25), Math.round(fin.expectedDailyNetCad * 0.1))) : 0;
+    headroom > 0
+      ? Math.max(
+          0,
+          Math.min(
+            Math.round(headroom * 0.25),
+            Math.round((needs.expectedDailyNetCad ?? fin.expectedDailyNetCad) * 0.1)
+          )
+        )
+      : 0;
 
   return {
     currentBalanceCad: fin.latestBalanceCad,
@@ -171,6 +213,7 @@ export function buildCashPlan(
     gapDate,
     upcomingObligations: upcoming30,
     safeToSaveTodayCad,
+    goal,
   };
 }
 

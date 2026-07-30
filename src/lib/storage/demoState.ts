@@ -16,6 +16,9 @@ export interface WorkerNeeds {
   bufferDays?: number;
   dailySpendCad?: number;
   excludedObligationIds?: string[];
+  expectedDailyNetCad?: number;
+  goalAmountCad?: number;
+  goalByDate?: string;
 }
 
 export interface PostedOpportunity {
