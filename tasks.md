@@ -41,6 +41,21 @@ Tick with a timestamp when done. Add discovered tasks under the right area.
 - [x] `/needs` page: buffer presets (1/2/3/5 days), daily spending input with 28-day estimate + "use estimate" reset, obligation toggles (excludedObligationIds), live gap/covered result panel with Find-work / View-plan CTA, WorkerSwitcher + loading/error/empty states (agent B, 2026-07-29 20:05)
 - [x] `/plan` rework: shortfall date+amount header (or covered-through), amber left-border + "short $X" chip on below-buffer rows, Edit needs link, Close this gap link when gap > 0 (agent B, 2026-07-29 20:05)
 
+## PR3: goal-first (owner: agent A — dashboard + needs)
+- [x] GoalSetter: first dashboard input, history-prefill amount/date, set/edit/clear via setNeeds (2026-07-29 20:20)
+- [x] CashGapHero: goal-led on-track / shortfall copy; buffer hint when no goal (2026-07-29 20:20)
+- [x] DailyShortfalls: horizontal weekday strip under hero (emerald/amber dots + shortfall amounts) (2026-07-29 20:20)
+- [x] CloseThisGap: goal-framed section title when plan.goal set (2026-07-29 20:20)
+- [x] `/needs`: goal section + expected daily income input with use-estimate reset (2026-07-29 20:20)
+- [x] Verify tsc --noEmit + eslint on owned files (2026-07-29 20:20)
+
+## PR3: goal-first (owner: agent B — plan + marketplace)
+- [x] `/plan`: goal-first header (on track / short), goal-day row chip, Set a goal link when no goal (2026-07-29 20:15)
+- [x] `/marketplace`: goal shortfall banner above tabs, pass goalShortfallCad to cards (2026-07-29 20:15)
+- [x] `OpportunityCard`: goal coverage % line when goalShortfallCad set (2026-07-29 20:15)
+- [x] `/marketplace/[id]`: goal before/after copy, late-payout amber note (2026-07-29 20:15)
+- [x] Verify tsc --noEmit + eslint on owned files (2026-07-29 20:15)
+
 ## Integration (owner: main agent)
 - [ ] Verify npx next build green after merges
 - [ ] Demo walkthrough check: claim OP-001 closes W-0014 gap; release Saturday shift warns

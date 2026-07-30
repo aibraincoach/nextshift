@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { EmptyWorker, ErrorPlan, LoadingPlan } from "@/components/dashboard/PageStatus";
+import { GoalFormFields, computeGoalPrefill } from "@/components/dashboard/GoalSetter";
 import { DemoResetButton } from "@/components/shared/DemoResetButton";
 import { WorkerSwitcher } from "@/components/shared/WorkerSwitcher";
 import { useAppData } from "@/lib/data/useAppData";
@@ -18,13 +19,20 @@ export default function NeedsPage() {
   const workerId = worker?.workerId ?? null;
   const needs = workerId ? (state.needsByWorker[workerId] ?? {}) : {};
   const estimate = financials ? Math.round(financials.avgDailyEssentialSpendCad) : 0;
+  const incomeEstimate = financials ? Math.round(financials.expectedDailyNetCad) : 0;
   const hasSpendOverride = needs.dailySpendCad != null;
+  const hasIncomeOverride = needs.expectedDailyNetCad != null;
 
   // Local text kept only while the user is editing for the current worker, so
   // typing isn't fought by the store round-trip. Falls back to the stored value.
   const [edit, setEdit] = useState<{ workerId: string; text: string } | null>(null);
+  const [incomeEdit, setIncomeEdit] = useState<{ workerId: string; text: string } | null>(null);
   const spendText =
     edit && edit.workerId === workerId ? edit.text : String(needs.dailySpendCad ?? estimate);
+  const incomeText =
+    incomeEdit && incomeEdit.workerId === workerId
+      ? incomeEdit.text
+      : String(needs.expectedDailyNetCad ?? incomeEstimate);
 
   if (loading) return <LoadingPlan />;
   if (error) return <ErrorPlan message={error} />;
@@ -43,6 +51,8 @@ export default function NeedsPage() {
   const bufferDays = needs.bufferDays ?? 2;
   const excluded = needs.excludedObligationIds ?? [];
   const plan = buildCashPlan(financials, demoToday, planOptions);
+  const goalPrefill = computeGoalPrefill(financials, demoToday, planOptions);
+  const hasGoal = needs.goalAmountCad != null && needs.goalAmountCad > 0 && !!needs.goalByDate;
   const lastDay = plan.projection[plan.projection.length - 1]?.date ?? demoToday;
   const hasGap = plan.cashGapCad > 0 && plan.gapDate != null;
 
@@ -51,6 +61,14 @@ export default function NeedsPage() {
     const v = Number(text);
     if (text.trim() !== "" && Number.isFinite(v) && v >= 0) {
       setNeeds(workerId, { dailySpendCad: v });
+    }
+  };
+
+  const onIncomeChange = (text: string) => {
+    setIncomeEdit({ workerId, text });
+    const v = Number(text);
+    if (text.trim() !== "" && Number.isFinite(v) && v >= 0) {
+      setNeeds(workerId, { expectedDailyNetCad: v });
     }
   };
 
@@ -75,6 +93,69 @@ export default function NeedsPage() {
           starts from here.
         </p>
       </div>
+
+      <section className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+        <h2 className="text-sm font-semibold text-emerald-300">Your goal</h2>
+        <p className="mt-1 text-xs text-zinc-500">
+          What do you need by when? Prefilled from your history — edit if it&apos;s wrong.
+        </p>
+        <div className="mt-3">
+          <GoalFormFields
+            key={`${workerId}-${hasGoal ? needs.goalAmountCad : goalPrefill.amountCad}-${hasGoal ? needs.goalByDate : goalPrefill.byDate}`}
+            workerId={workerId}
+            demoToday={demoToday}
+            initialAmount={hasGoal ? needs.goalAmountCad! : goalPrefill.amountCad}
+            initialDate={hasGoal ? needs.goalByDate! : goalPrefill.byDate}
+          />
+        </div>
+        {hasGoal && (
+          <button
+            type="button"
+            onClick={() => setNeeds(workerId, { goalAmountCad: undefined, goalByDate: undefined })}
+            className="mt-3 rounded-lg border border-zinc-800 px-3 py-2 text-xs font-medium text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
+          >
+            Clear goal
+          </button>
+        )}
+      </section>
+
+      <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+        <h2 className="text-sm font-semibold text-zinc-200">Expected daily income</h2>
+        <p className="mt-1 text-xs text-zinc-500">
+          {hasIncomeOverride
+            ? "You've set your own number."
+            : "Estimated from your history — edit if it's wrong."}
+        </p>
+        <div className="mt-3 flex items-center gap-2">
+          <div className="relative flex-1">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">
+              $
+            </span>
+            <input
+              type="number"
+              inputMode="decimal"
+              min={0}
+              value={incomeText}
+              onChange={(e) => onIncomeChange(e.target.value)}
+              aria-label="Expected daily income in CAD"
+              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2.5 pl-7 pr-3 text-sm font-semibold tabular-nums text-zinc-100 outline-none focus:border-emerald-500/60"
+            />
+          </div>
+          <span className="text-xs text-zinc-500">/ day</span>
+          {hasIncomeOverride && (
+            <button
+              type="button"
+              onClick={() => {
+                setIncomeEdit(null);
+                setNeeds(workerId, { expectedDailyNetCad: undefined });
+              }}
+              className="rounded-lg border border-zinc-800 px-3 py-2.5 text-xs font-medium text-zinc-300 hover:border-zinc-700"
+            >
+              Use estimate ({fmtMoney(incomeEstimate)})
+            </button>
+          )}
+        </div>
+      </section>
 
       <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
         <h2 className="text-sm font-semibold text-zinc-200">Safety buffer</h2>

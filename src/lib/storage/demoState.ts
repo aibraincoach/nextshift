@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import type { NeedsSettings } from "@/lib/engine/plan";
 
 export interface DemoState {
   selectedWorkerId: string | null;
@@ -12,11 +13,8 @@ export interface DemoState {
   needsByWorker: Record<string, WorkerNeeds>;
 }
 
-export interface WorkerNeeds {
-  bufferDays?: number;
-  dailySpendCad?: number;
-  excludedObligationIds?: string[];
-}
+// Single source of truth for the needs shape lives in the engine.
+export type WorkerNeeds = NeedsSettings;
 
 export interface PostedOpportunity {
   id: string;

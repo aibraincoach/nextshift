@@ -113,10 +113,19 @@ export interface CashPlan {
   projection: DayProjection[];
   lowestBalanceCad: number;
   lowestBalanceDate: string;
-  cashGapCad: number; // max(0, buffer - lowest)
+  /** When a user goal is set: shortfall against the goal. Otherwise buffer-based. */
+  cashGapCad: number;
   gapDate: string | null;
   upcomingObligations: { name: string; amountCad: number; date: string; essential: boolean }[];
   safeToSaveTodayCad: number;
+  /** Present when the user has entered "I need $X by DATE". */
+  goal?: {
+    amountCad: number;
+    byDate: string;
+    projectedBalanceCad: number;
+    shortfallCad: number;
+    onTrack: boolean;
+  };
 }
 
 export interface OpportunityImpact {

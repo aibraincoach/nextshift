@@ -19,6 +19,7 @@ export function OpportunityCard({
   demoToday,
   claimed,
   gapDate,
+  goalShortfallCad,
 }: {
   opp: Opportunity;
   score: MatchScore;
@@ -27,14 +28,21 @@ export function OpportunityCard({
   claimed: boolean;
   /** date of the worker's current cash gap, if any (from the base plan) */
   gapDate: string | null;
+  /** when set, show goal coverage instead of buffer days */
+  goalShortfallCad?: number;
 }) {
   const hours = hoursLabel(opp);
   const isJob = opp.type === "job";
+  const reducesGap = impact.gapAfterCad < impact.gapBeforeCad;
   const impactLine = isJob
     ? null
-    : impact.closesGap
-      ? `Closes your ${gapDate ? fmtDate(gapDate) + " " : ""}gap · +${impact.bufferDaysGained} buffer days`
-      : `+${impact.bufferDaysGained} buffer days`;
+    : goalShortfallCad != null && goalShortfallCad > 0 && reducesGap
+      ? impact.gapAfterCad === 0
+        ? `Closes your goal`
+        : `Covers ${Math.min(100, Math.round((impact.netCad / goalShortfallCad) * 100))}% of your goal`
+      : impact.closesGap
+        ? `Closes your ${gapDate ? fmtDate(gapDate) + " " : ""}gap · +${impact.bufferDaysGained} buffer days`
+        : `+${impact.bufferDaysGained} buffer days`;
 
   return (
     <Link

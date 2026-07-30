@@ -5,6 +5,7 @@ import type { CashPlan } from "@/types";
 import { fmtDate, fmtMoney } from "@/lib/engine/plan";
 
 export function CashGapHero({ plan }: { plan: CashPlan }) {
+  const goal = plan.goal;
   const hasGap = plan.cashGapCad > 0 && plan.gapDate;
   const lastProjectionDate = plan.projection[plan.projection.length - 1]?.date;
   const nextObl = plan.upcomingObligations[0];
@@ -18,7 +19,39 @@ export function CashGapHero({ plan }: { plan: CashPlan }) {
           : "border-emerald-500/40 bg-emerald-500/10"
       }`}
     >
-      {hasGap ? (
+      {goal ? (
+        goal.onTrack ? (
+          <>
+            <p className="text-sm font-medium text-emerald-300">On track</p>
+            <h1 className="mt-2 text-2xl font-bold tracking-tight text-zinc-50 sm:text-3xl">
+              You&apos;re on track: projected{" "}
+              <span className="tabular-nums text-emerald-200">
+                {fmtMoney(goal.projectedBalanceCad)}
+              </span>{" "}
+              by <span className="text-emerald-200">{fmtDate(goal.byDate)}</span>
+            </h1>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+              Your goal of {fmtMoney(goal.amountCad)} by {fmtDate(goal.byDate)} looks reachable
+              on current earnings.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-sm font-medium text-amber-300">Goal shortfall</p>
+            <h1 className="mt-2 text-2xl font-bold tracking-tight text-zinc-50 sm:text-3xl">
+              You need{" "}
+              <span className="tabular-nums text-amber-200">
+                {fmtMoney(goal.shortfallCad)}
+              </span>{" "}
+              more by <span className="text-amber-200">{fmtDate(goal.byDate)}</span>
+            </h1>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-300">
+              Projected {fmtMoney(goal.projectedBalanceCad)} by then —{" "}
+              {fmtMoney(goal.amountCad)} is your target.
+            </p>
+          </>
+        )
+      ) : hasGap ? (
         <>
           <p className="text-sm font-medium text-amber-300">Shortfall</p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-zinc-50 sm:text-3xl">
@@ -31,6 +64,7 @@ export function CashGapHero({ plan }: { plan: CashPlan }) {
             <span className="font-semibold text-zinc-100">{coverLabel}</span> and keep your
             buffer.
           </p>
+          <p className="mt-2 text-xs text-zinc-500">Set a goal above for an exact target.</p>
         </>
       ) : (
         <>
@@ -42,6 +76,7 @@ export function CashGapHero({ plan }: { plan: CashPlan }) {
           <p className="mt-2 text-sm leading-relaxed text-zinc-400">
             Your projected balance stays above your buffer target.
           </p>
+          <p className="mt-2 text-xs text-zinc-500">Set a goal above for an exact target.</p>
         </>
       )}
 
