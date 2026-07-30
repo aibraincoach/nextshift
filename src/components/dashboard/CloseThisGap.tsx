@@ -30,7 +30,18 @@ export function CloseThisGap({
   const { state } = useDemoState();
   const gapCad = plan.cashGapCad;
 
-  if (gapCad <= 0) return null;
+  if (gapCad <= 0) {
+    return (
+      <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+        <p className="text-sm text-zinc-400">
+          You&apos;re covered. Looking ahead?{" "}
+          <Link href="/marketplace" className="font-medium text-emerald-400 hover:text-emerald-300">
+            Browse open shifts
+          </Link>
+        </p>
+      </section>
+    );
+  }
 
   const ranked = opportunities
     .filter((o) => !state.claimedOpportunityIds.includes(o.id))

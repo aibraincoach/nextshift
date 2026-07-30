@@ -169,7 +169,7 @@ export default function PlanPage() {
           <span className="font-semibold tabular-nums text-zinc-100">
             {fmtMoney(plan.bufferTargetCad)}
           </span>{" "}
-          — your chosen days of everyday spending plus a small pad — so one quiet day doesn&apos;t
+          — exactly your chosen days of everyday spending — so one quiet day doesn&apos;t
           tip you into a shortfall. Rows highlighted in amber end below that target. You can
           change your buffer and daily spending on the{" "}
           <Link href="/needs" className="underline hover:text-zinc-200">

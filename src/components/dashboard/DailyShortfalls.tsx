@@ -4,6 +4,7 @@ import type { CashPlan } from "@/types";
 import { fmtMoney } from "@/lib/engine/plan";
 
 function weekdayShort(iso: string): string {
+  // Noon anchor avoids DST/midnight off-by-one when parsing a bare ISO date.
   return new Date(iso + "T12:00:00").toLocaleDateString("en-CA", { weekday: "short" });
 }
 

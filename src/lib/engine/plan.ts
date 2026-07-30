@@ -190,8 +190,9 @@ export function buildCashPlan(
       : null;
 
   // Safe to save today: what can be set aside while every projected day stays
-  // at or above the buffer target.
-  const headroom = lowest - bufferTargetCad;
+  // at or above the buffer target. Never suggest saving while the user is
+  // short on their stated goal.
+  const headroom = goal && goal.shortfallCad > 0 ? 0 : lowest - bufferTargetCad;
   const safeToSaveTodayCad =
     headroom > 0
       ? Math.max(
