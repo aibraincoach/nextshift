@@ -21,6 +21,13 @@ export function fmtDate(iso: string): string {
   });
 }
 
+export function fmtHour(h: number): string {
+  // Hours >= 24 mean the shift runs past midnight (e.g. 29 = 5 AM next day).
+  const day = h % 24;
+  const hr = day % 12 === 0 ? 12 : day % 12;
+  return `${hr}${day < 12 ? " AM" : " PM"}`;
+}
+
 export function fmtMoney(v: number): string {
   return v.toLocaleString("en-CA", {
     style: "currency",

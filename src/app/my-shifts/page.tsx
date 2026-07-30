@@ -5,17 +5,11 @@ import { useMemo, useState } from "react";
 import { CalendarDays, Store } from "lucide-react";
 import { useAppData } from "@/lib/data/useAppData";
 import { useDemoState } from "@/lib/storage/demoState";
-import { fmtDate, fmtMoney, opportunityDate, releaseImpact } from "@/lib/engine/plan";
+import { fmtDate, fmtHour, fmtMoney, opportunityDate, releaseImpact } from "@/lib/engine/plan";
 import { ReleaseShiftDialog } from "@/components/marketplace/ReleaseShiftDialog";
 import { WorkerSwitcher } from "@/components/shared/WorkerSwitcher";
 import type { AssignedShift } from "@/types";
 
-function fmtHour(h: number): string {
-  // Hours >= 24 mean the shift runs past midnight (e.g. 29 = 5 AM next day).
-  const day = h % 24;
-  const hr = day % 12 === 0 ? 12 : day % 12;
-  return `${hr}${day < 12 ? " AM" : " PM"}`;
-}
 
 export default function MyShiftsPage() {
   const { loading, error, opportunities, financials, demoToday, planOptions } = useAppData();

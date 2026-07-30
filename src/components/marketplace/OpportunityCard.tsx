@@ -3,15 +3,9 @@
 import Link from "next/link";
 import { MapPin, Clock } from "lucide-react";
 import type { MatchScore, Opportunity, OpportunityImpact } from "@/types";
-import { fmtDate, fmtMoney, opportunityDate } from "@/lib/engine/plan";
+import { fmtDate, fmtHour, fmtMoney, opportunityDate } from "@/lib/engine/plan";
 import { primaryReason } from "@/lib/engine/match";
 
-function fmtHour(h: number): string {
-  // Hours >= 24 mean the shift runs past midnight (e.g. 29 = 5 AM next day).
-  const day = h % 24;
-  const hr = day % 12 === 0 ? 12 : day % 12;
-  return `${hr}${day < 12 ? " AM" : " PM"}`;
-}
 
 export function hoursLabel(opp: Opportunity): string | null {
   if (opp.startHour == null || opp.endHour == null) return null;

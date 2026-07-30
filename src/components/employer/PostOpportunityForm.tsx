@@ -237,13 +237,13 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
               </div>
               <div>
                 <label className={labelCls} htmlFor="end">
-                  End hour (0–23)
+                  End hour (use 24+ for past midnight, e.g. 29 = 5 AM)
                 </label>
                 <input
                   id="end"
                   type="number"
                   min={0}
-                  max={23}
+                  max={47}
                   className={inputCls}
                   value={endHour}
                   onChange={(e) => setEndHour(Number(e.target.value))}

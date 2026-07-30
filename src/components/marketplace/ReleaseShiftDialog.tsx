@@ -22,7 +22,7 @@ export function ReleaseShiftDialog({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
-  const shortfall = Math.round((impact.gapAfterCad - impact.gapBeforeCad) * 100) / 100;
+  const shortfall = Math.abs(Math.round((impact.gapAfterCad - impact.gapBeforeCad) * 100) / 100);
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 sm:items-center">
       <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-5">

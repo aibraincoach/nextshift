@@ -87,6 +87,8 @@ export function jobMonthlySurplus(fin: WorkerFinancials, weeklyNetCad: number): 
     return s + o.amountCad * factor;
   }, 0);
   const monthlySpend = fin.avgDailyEssentialSpendCad * 30;
+  // 4.33 (~52/12) weeks/month and 26/12 biweekly periods/month are both
+  // deliberate approximations; keep them in sync if you change either.
   return Math.round(weeklyNetCad * 4.33 - monthlyObligations - monthlySpend);
 }
 
