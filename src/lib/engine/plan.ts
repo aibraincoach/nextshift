@@ -78,6 +78,17 @@ export interface PlanOptions {
   removedIncome?: { date: string; netCad: number }[];
   savingsRate?: number; // 0..1, applied to expected daily earnings
   horizonDays?: number;
+  /** User-set needs (budget-first): override the derived defaults. */
+  needs?: NeedsSettings;
+}
+
+export interface NeedsSettings {
+  /** Safety buffer expressed in days of everyday spending (default 2). */
+  bufferDays?: number;
+  /** Override for average daily everyday spending, CAD. */
+  dailySpendCad?: number;
+  /** Obligation IDs the user has toggled off (paused/not mine). */
+  excludedObligationIds?: string[];
 }
 
 export function buildCashPlan(
@@ -86,9 +97,19 @@ export function buildCashPlan(
   opts: PlanOptions = {}
 ): CashPlan {
   const horizon = opts.horizonDays ?? 7;
-  const bufferTargetCad = Math.max(40, Math.round(fin.avgDailyEssentialSpendCad * 2 + 40));
-  const dueDates = obligationDates(fin.obligations, demoToday, horizon);
-  const upcoming30 = obligationDates(fin.obligations, demoToday, 30);
+  const needs = opts.needs ?? {};
+  const dailySpend =
+    needs.dailySpendCad != null && needs.dailySpendCad >= 0
+      ? needs.dailySpendCad
+      : fin.avgDailyEssentialSpendCad;
+  const bufferDays = needs.bufferDays ?? 2;
+  // The buffer is exactly what the user asked for: bufferDays worth of their
+  // daily spending. No hidden padding — the user sets the budget.
+  const bufferTargetCad = Math.round(dailySpend * bufferDays * 100) / 100;
+  const excluded = new Set(needs.excludedObligationIds ?? []);
+  const activeObligations = fin.obligations.filter((o) => !excluded.has(o.obligationId));
+  const dueDates = obligationDates(activeObligations, demoToday, horizon);
+  const upcoming30 = obligationDates(activeObligations, demoToday, 30);
 
   const extraByDate = new Map<string, number>();
   for (const e of opts.extraIncome ?? []) {
@@ -114,7 +135,7 @@ export function buildCashPlan(
     const extra = extraByDate.get(date) ?? 0;
     const dayObls = dueDates.filter((o) => o.date === date);
     const oblTotal = dayObls.reduce((s, o) => s + o.amountCad, 0);
-    const spend = fin.avgDailyEssentialSpendCad;
+    const spend = dailySpend;
     balance = balance + baseEarn + extra - oblTotal - spend;
     projection.push({
       date,

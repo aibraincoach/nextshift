@@ -6,9 +6,9 @@ import { Home, Search, CalendarDays, TrendingUp, Building2 } from "lucide-react"
 
 const TABS = [
   { href: "/", label: "Today", icon: Home },
+  { href: "/plan", label: "Plan", icon: TrendingUp },
   { href: "/marketplace", label: "Find Work", icon: Search },
   { href: "/my-shifts", label: "My Shifts", icon: CalendarDays },
-  { href: "/plan", label: "Plan", icon: TrendingUp },
 ];
 
 export function BottomNav() {

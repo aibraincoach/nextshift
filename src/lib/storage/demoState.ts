@@ -8,6 +8,14 @@ export interface DemoState {
   releasedShiftIds: string[]; // assigned shifts the worker released
   savingsRate: number; // 0, 0.02, 0.05, or custom
   postedOpportunities: PostedOpportunity[];
+  /** Budget-first user-set needs, keyed by workerId. */
+  needsByWorker: Record<string, WorkerNeeds>;
+}
+
+export interface WorkerNeeds {
+  bufferDays?: number;
+  dailySpendCad?: number;
+  excludedObligationIds?: string[];
 }
 
 export interface PostedOpportunity {
@@ -34,6 +42,7 @@ const DEFAULT_STATE: DemoState = {
   releasedShiftIds: [],
   savingsRate: 0,
   postedOpportunities: [],
+  needsByWorker: {},
 };
 
 let cache: DemoState = DEFAULT_STATE;
@@ -98,6 +107,17 @@ export function useDemoState() {
     }
   }, []);
 
+  const setNeeds = useCallback((workerId: string, needs: WorkerNeeds) => {
+    const s = read();
+    write({
+      ...s,
+      needsByWorker: {
+        ...s.needsByWorker,
+        [workerId]: { ...s.needsByWorker[workerId], ...needs },
+      },
+    });
+  }, []);
+
   const postOpportunity = useCallback((opp: PostedOpportunity) => {
     const s = read();
     write({ ...s, postedOpportunities: [...s.postedOpportunities, opp] });
@@ -107,5 +127,5 @@ export function useDemoState() {
     write(DEFAULT_STATE);
   }, []);
 
-  return { state, update, claim, unclaim, releaseShift, postOpportunity, reset };
+  return { state, update, claim, unclaim, releaseShift, setNeeds, postOpportunity, reset };
 }

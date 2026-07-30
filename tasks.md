@@ -29,6 +29,18 @@ Tick with a timestamp when done. Add discovered tasks under the right area.
 - [x] `/employer/post`: post shift + post job forms -> postOpportunity (dayOffset from date input relative to demoToday), success panel with mock match summary (eligible workers, N with predicted gap in 7 days, M role+city match) (2026-07-29 19:35)
 - [x] Loading + error states (2026-07-29 19:35)
 
+## PR2: budget-first (owner: agent A — dashboard + nav)
+- [x] `/` hierarchy: Your budget strip → shortfall hero → runway → Close this gap action layer → AdvanceVsShift (2026-07-29 20:00)
+- [x] BudgetSummary: buffer target, daily spend (needs override), next obligation, Edit needs → /needs (2026-07-29 20:00)
+- [x] CashGapHero: date-led shortfall / budget-holds copy; marketplace CTA removed from hero (2026-07-29 20:00)
+- [x] CloseThisGap: top 3 scoreOpportunity matches that reduce gap, compact rows → /marketplace/[id], See all work (2026-07-29 20:00)
+- [x] BottomNav reorder: Today | Plan | Find Work | My Shifts (2026-07-29 20:00)
+- [x] Verify tsc --noEmit + eslint on owned files (2026-07-29 20:00)
+
+## PR2: budget-first
+- [x] `/needs` page: buffer presets (1/2/3/5 days), daily spending input with 28-day estimate + "use estimate" reset, obligation toggles (excludedObligationIds), live gap/covered result panel with Find-work / View-plan CTA, WorkerSwitcher + loading/error/empty states (agent B, 2026-07-29 20:05)
+- [x] `/plan` rework: shortfall date+amount header (or covered-through), amber left-border + "short $X" chip on below-buffer rows, Edit needs link, Close this gap link when gap > 0 (agent B, 2026-07-29 20:05)
+
 ## Integration (owner: main agent)
 - [ ] Verify npx next build green after merges
 - [ ] Demo walkthrough check: claim OP-001 closes W-0014 gap; release Saturday shift warns
