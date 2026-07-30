@@ -84,7 +84,9 @@ export function buildCashPlan(
   const savingsRate = opts.savingsRate ?? 0;
   const projection: DayProjection[] = [];
   let balance = fin.latestBalanceCad;
-  let lowest = balance;
+  // The gap is measured from tomorrow onward: today's balance is a fact the
+  // worker can't change, but upcoming days are where earnings can land.
+  let lowest = Number.POSITIVE_INFINITY;
   let lowestDate = demoToday;
 
   for (let i = 0; i < horizon; i++) {
@@ -105,7 +107,7 @@ export function buildCashPlan(
       essentialSpendCad: spend,
       endingBalanceCad: Math.round(balance * 100) / 100,
     });
-    if (balance < lowest) {
+    if (i >= 1 && balance < lowest) {
       lowest = balance;
       lowestDate = date;
     }
