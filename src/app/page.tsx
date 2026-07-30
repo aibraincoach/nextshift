@@ -1,25 +1,16 @@
 "use client";
 
 import { AdvanceVsShift } from "@/components/dashboard/AdvanceVsShift";
+import { BudgetSummary } from "@/components/dashboard/BudgetSummary";
 import { CashGapHero } from "@/components/dashboard/CashGapHero";
+import { CloseThisGap } from "@/components/dashboard/CloseThisGap";
 import { EmptyWorker, ErrorPlan, LoadingPlan } from "@/components/dashboard/PageStatus";
 import { RunwayChart } from "@/components/dashboard/RunwayChart";
 import { UpcomingObligations } from "@/components/dashboard/UpcomingObligations";
 import { DemoResetButton } from "@/components/shared/DemoResetButton";
-import { MetricCard } from "@/components/shared/MetricCard";
 import { WorkerSwitcher } from "@/components/shared/WorkerSwitcher";
 import { useAppData } from "@/lib/data/useAppData";
-import { buildCashPlan, fmtDate, fmtMoney } from "@/lib/engine/plan";
-
-function runwayLabel(
-  projection: ReturnType<typeof buildCashPlan>["projection"],
-  bufferTargetCad: number
-): string {
-  const idx = projection.findIndex((d) => d.endingBalanceCad < bufferTargetCad);
-  if (idx === -1) return "7+ days";
-  if (idx === 0) return "0 days";
-  return `${idx} day${idx === 1 ? "" : "s"}`;
-}
+import { buildCashPlan } from "@/lib/engine/plan";
 
 export default function DashboardPage() {
   const { loading, error, worker, financials, demoToday, planOptions, opportunities } =
@@ -40,10 +31,8 @@ export default function DashboardPage() {
   }
 
   const plan = buildCashPlan(financials, demoToday, planOptions);
-  const nextObl = plan.upcomingObligations[0];
-  const runway = runwayLabel(plan.projection, plan.bufferTargetCad);
-  const runwayTone =
-    runway === "7+ days" ? "good" : runway === "0 days" ? "bad" : ("warn" as const);
+  const dailySpendCad =
+    planOptions.needs?.dailySpendCad ?? financials.avgDailyEssentialSpendCad;
 
   return (
     <div className="space-y-4">
@@ -52,37 +41,22 @@ export default function DashboardPage() {
         <DemoResetButton />
       </div>
 
-      <CashGapHero plan={plan} />
+      <BudgetSummary plan={plan} dailySpendCad={dailySpendCad} />
 
-      <div className="grid grid-cols-2 gap-2">
-        <MetricCard
-          label="Available now"
-          value={fmtMoney(plan.currentBalanceCad)}
-          tone={plan.currentBalanceCad < 0 ? "bad" : "neutral"}
-        />
-        <MetricCard
-          label="Next obligation"
-          value={nextObl ? fmtMoney(nextObl.amountCad) : "—"}
-          sub={nextObl ? `${nextObl.name} · ${fmtDate(nextObl.date)}` : "None soon"}
-        />
-        <MetricCard label="Runway" value={runway} tone={runwayTone} sub="Until below buffer" />
-        <MetricCard
-          label="Earnings needed"
-          value={fmtMoney(plan.cashGapCad)}
-          tone={plan.cashGapCad > 0 ? "warn" : "good"}
-          sub={plan.gapDate ? `by ${fmtDate(plan.gapDate)}` : "Gap closed"}
-        />
-        <MetricCard
-          label="Safe to save today"
-          value={fmtMoney(plan.safeToSaveTodayCad)}
-          tone={plan.safeToSaveTodayCad > 0 ? "good" : "neutral"}
-          sub="Keeps bills covered"
-        />
-      </div>
+      <CashGapHero plan={plan} />
 
       <RunwayChart projection={plan.projection} bufferTargetCad={plan.bufferTargetCad} />
 
       <UpcomingObligations upcoming={plan.upcomingObligations} />
+
+      <CloseThisGap
+        worker={worker}
+        financials={financials}
+        demoToday={demoToday}
+        opportunities={opportunities}
+        planOptions={planOptions}
+        gapCad={plan.cashGapCad}
+      />
 
       <AdvanceVsShift
         worker={worker}

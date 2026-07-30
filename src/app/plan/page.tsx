@@ -38,6 +38,26 @@ export default function PlanPage() {
         <p className="mt-1 text-sm text-zinc-400">
           Projected cash day by day from {fmtDate(demoToday)}.
         </p>
+        {plan.cashGapCad > 0 && plan.gapDate ? (
+          <p className="mt-2 text-sm font-semibold text-amber-300">
+            You come up {fmtMoney(plan.cashGapCad)} short on {fmtDate(plan.gapDate)}.
+          </p>
+        ) : (
+          <p className="mt-2 text-sm font-semibold text-emerald-400">
+            You&apos;re covered through{" "}
+            {fmtDate(plan.projection[plan.projection.length - 1]?.date ?? demoToday)}.
+          </p>
+        )}
+        <div className="mt-2 flex items-center gap-3 text-sm">
+          <Link href="/needs" className="text-zinc-300 underline hover:text-zinc-100">
+            Edit needs
+          </Link>
+          {plan.cashGapCad > 0 && (
+            <Link href="/marketplace" className="text-amber-300 underline hover:text-amber-200">
+              Close this gap
+            </Link>
+          )}
+        </div>
       </div>
 
       <section className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/60">
@@ -59,10 +79,17 @@ export default function PlanPage() {
                   <tr
                     key={day.date}
                     className={`border-b border-zinc-800/80 last:border-0 ${
-                      below ? "bg-rose-500/10" : ""
+                      below ? "border-l-4 border-l-amber-500 bg-amber-500/10" : ""
                     }`}
                   >
-                    <td className="px-3 py-2.5 text-zinc-200">{fmtDate(day.date)}</td>
+                    <td className="px-3 py-2.5 text-zinc-200">
+                      {fmtDate(day.date)}
+                      {below && (
+                        <span className="ml-2 inline-block rounded-full bg-amber-500/20 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-amber-300">
+                          short {fmtMoney(plan.bufferTargetCad - day.endingBalanceCad)}
+                        </span>
+                      )}
+                    </td>
                     <td className="px-3 py-2.5 text-right tabular-nums text-emerald-300/90">
                       {fmtMoney(day.earningsCad)}
                     </td>
@@ -83,7 +110,7 @@ export default function PlanPage() {
                     </td>
                     <td
                       className={`px-3 py-2.5 text-right font-semibold tabular-nums ${
-                        below ? "text-rose-300" : "text-zinc-100"
+                        below ? "text-amber-300" : "text-zinc-100"
                       }`}
                     >
                       {fmtMoney(day.endingBalanceCad)}
@@ -103,8 +130,13 @@ export default function PlanPage() {
           <span className="font-semibold tabular-nums text-zinc-100">
             {fmtMoney(plan.bufferTargetCad)}
           </span>{" "}
-          — about two days of everyday spending plus a small pad — so one quiet day doesn&apos;t
-          tip you into a shortfall. Rows highlighted in rose end below that target.
+          — your chosen days of everyday spending plus a small pad — so one quiet day doesn&apos;t
+          tip you into a shortfall. Rows highlighted in amber end below that target. You can
+          change your buffer and daily spending on the{" "}
+          <Link href="/needs" className="underline hover:text-zinc-200">
+            needs page
+          </Link>
+          .
         </p>
         {plan.cashGapCad > 0 && plan.gapDate ? (
           <p className="mt-3 text-sm text-amber-300">
