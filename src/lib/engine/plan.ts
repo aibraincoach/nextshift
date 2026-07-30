@@ -36,18 +36,28 @@ export function obligationDates(
   days: number
 ): { name: string; amountCad: number; date: string; essential: boolean }[] {
   const out: { name: string; amountCad: number; date: string; essential: boolean }[] = [];
+  // Biweekly obligations are anchored to their due day in the starting month,
+  // then recur every 14 days, so they stay correct across month boundaries.
+  const biweeklyAnchor = (o: Obligation): number => {
+    const from = new Date(fromIso + "T12:00:00");
+    const anchor = new Date(from.getFullYear(), from.getMonth(), Math.min(o.dueDayOfMonth, 28), 12);
+    while (anchor > from) anchor.setDate(anchor.getDate() - 14);
+    return anchor.getTime();
+  };
+  const anchors = new Map<string, number>();
+  for (const o of obligations) {
+    if (o.frequency === "biweekly") anchors.set(o.obligationId, biweeklyAnchor(o));
+  }
   for (let i = 0; i < days; i++) {
     const iso = addDays(fromIso, i);
     const d = new Date(iso + "T12:00:00");
     for (const o of obligations) {
       const due =
-        o.frequency === "monthly"
-          ? d.getDate() === Math.min(o.dueDayOfMonth, 28)
-          : o.frequency === "biweekly"
-            ? d.getDate() === o.dueDayOfMonth || d.getDate() === ((o.dueDayOfMonth + 13) % 28) + 1
-            : o.frequency === "weekly"
-              ? d.getDay() === o.dueDayOfMonth % 7
-              : d.getDate() === o.dueDayOfMonth;
+        o.frequency === "biweekly"
+          ? Math.round((d.getTime() - (anchors.get(o.obligationId) ?? d.getTime())) / 86400000) % 14 === 0
+          : o.frequency === "weekly"
+            ? d.getDay() === o.dueDayOfMonth % 7
+            : d.getDate() === Math.min(o.dueDayOfMonth, 28);
       if (due) out.push({ name: o.name, amountCad: o.amountCad, date: iso, essential: o.essential });
     }
   }
@@ -113,6 +123,7 @@ export function buildCashPlan(
     }
   }
 
+  if (!Number.isFinite(lowest)) lowest = balance;
   const cashGapCad = Math.max(0, Math.round((bufferTargetCad - lowest) * 100) / 100);
   const gapDate = cashGapCad > 0 ? lowestDate : null;
 
@@ -155,7 +166,8 @@ export function opportunityImpact(
     ...baseOpts,
     extraIncome: [...(baseOpts.extraIncome ?? []), { date: payoutDate, netCad: opp.estimatedNetCad }],
   });
-  const spend = Math.max(1, fin.avgDailyEssentialSpendCad);
+  // Floor at $5/day so near-zero spenders don't show absurd buffer-day gains.
+  const spend = Math.max(5, fin.avgDailyEssentialSpendCad);
   return {
     netCad: opp.estimatedNetCad,
     gapBeforeCad: before.cashGapCad,

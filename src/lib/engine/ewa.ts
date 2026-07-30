@@ -65,7 +65,7 @@ export function compareAdvanceVsShift(
       feeCad: 0,
       payoutDate,
       bufferDaysGained:
-        Math.round((bestShift.estimatedNetCad / Math.max(1, fin.avgDailyEssentialSpendCad)) * 10) / 10,
+        Math.round((bestShift.estimatedNetCad / Math.max(5, fin.avgDailyEssentialSpendCad)) * 10) / 10,
       residualGapCad: withShift.cashGapCad,
     };
   }

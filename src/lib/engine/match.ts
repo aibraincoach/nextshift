@@ -2,7 +2,7 @@ import type { MatchScore, Opportunity, Worker, WorkerFinancials } from "@/types"
 import { fmtDate, opportunityDate, opportunityImpact, type PlanOptions } from "./plan";
 
 const RELATED_ROLES: Record<string, string[]> = {
-  "Gig delivery driver": ["Rideshare driver", "Moving helper", "Peace Bridge Couriers"],
+  "Gig delivery driver": ["Rideshare driver", "Moving helper"],
   "Rideshare driver": ["Gig delivery driver", "Moving helper"],
   "Cleaning / janitorial": ["Hotel housekeeping", "Event / venue staff"],
   "Hotel housekeeping": ["Cleaning / janitorial"],
@@ -66,7 +66,7 @@ export function scoreOpportunity(
   }
 
   return {
-    total: gapCoverage + roleMatch + cityMatch + availabilityMatch + payoutSpeed,
+    total: Math.min(100, gapCoverage + roleMatch + cityMatch + availabilityMatch + payoutSpeed),
     gapCoverage,
     roleMatch,
     cityMatch,
@@ -81,9 +81,11 @@ export function primaryReason(score: MatchScore): string {
 }
 
 export function jobMonthlySurplus(fin: WorkerFinancials, weeklyNetCad: number): number {
-  const monthlyObligations = fin.obligations
-    .filter((o) => o.frequency === "monthly")
-    .reduce((s, o) => s + o.amountCad, 0);
+  const monthlyObligations = fin.obligations.reduce((s, o) => {
+    const factor =
+      o.frequency === "monthly" ? 1 : o.frequency === "biweekly" ? 26 / 12 : o.frequency === "weekly" ? 52 / 12 : 1;
+    return s + o.amountCad * factor;
+  }, 0);
   const monthlySpend = fin.avgDailyEssentialSpendCad * 30;
   return Math.round(weeklyNetCad * 4.33 - monthlyObligations - monthlySpend);
 }
