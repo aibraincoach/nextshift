@@ -103,7 +103,9 @@ export function buildCashPlan(
       ? needs.dailySpendCad
       : fin.avgDailyEssentialSpendCad;
   const bufferDays = needs.bufferDays ?? 2;
-  const bufferTargetCad = Math.max(40, Math.round(dailySpend * bufferDays + 40));
+  // The buffer is exactly what the user asked for: bufferDays worth of their
+  // daily spending. No hidden padding — the user sets the budget.
+  const bufferTargetCad = Math.round(dailySpend * bufferDays * 100) / 100;
   const excluded = new Set(needs.excludedObligationIds ?? []);
   const activeObligations = fin.obligations.filter((o) => !excluded.has(o.obligationId));
   const dueDates = obligationDates(activeObligations, demoToday, horizon);
