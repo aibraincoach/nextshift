@@ -57,7 +57,8 @@ Tick with a timestamp when done. Add discovered tasks under the right area.
 - [x] Verify tsc --noEmit + eslint on owned files (2026-07-29 20:15)
 
 ## Integration (owner: main agent)
-- [ ] Verify npx next build green after merges
-- [ ] Demo walkthrough check: claim OP-001 closes W-0014 gap; release Saturday shift warns
-- [ ] Push to GitHub
-- [ ] Deploy to Vercel (waiting on user credentials/info)
+- [x] Verify npx next build green after merges
+- [x] Demo walkthrough check: claim OP-017 closes W-0014 gap; release Saturday shift warns
+- [x] Push to GitHub / Vercel live at nextshift.vercel.app
+- [ ] Merge Modernist redesign PR #4 when reviewed
+- [x] Docs lifespan catalog PR (docs/LIFESPAN.md) (2026-08-01)
