@@ -43,7 +43,7 @@ export function CloseThisGap({
           You&apos;re covered. Looking ahead?{" "}
           <Link
             href="/marketplace"
-            className="no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent)]"
+            className="no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent-700)]"
             style={{ fontWeight: 600 }}
           >
             Browse open shifts
@@ -79,7 +79,7 @@ export function CloseThisGap({
         </h2>
         <Link
           href="/marketplace"
-          className="shrink-0 text-xs no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent)]"
+          className="shrink-0 text-xs no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent-700)]"
           style={{ fontWeight: 600 }}
         >
           See all work →
@@ -91,7 +91,7 @@ export function CloseThisGap({
           No open work reduces this gap right now.{" "}
           <Link
             href="/marketplace"
-            className="no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent)]"
+            className="no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent-700)]"
           >
             Browse marketplace
           </Link>

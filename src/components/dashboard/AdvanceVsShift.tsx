@@ -107,7 +107,7 @@ export function AdvanceVsShift({
                 </div>
                 <Link
                   href={`/marketplace/${bestShift.id}`}
-                  className="mt-2 inline-block no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent)]"
+                  className="mt-2 inline-block no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent-700)]"
                   style={{ fontWeight: 600 }}
                 >
                   View shift →

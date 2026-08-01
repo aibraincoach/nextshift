@@ -79,6 +79,7 @@ export function DemoStrip() {
               style={{
                 padding: "5px 10px",
                 fontSize: 11,
+                minHeight: 32, /* compact DEMO strip; main form segs stay 44px */
                 ...(active
                   ? { background: "var(--color-accent)", color: "var(--color-bg)", fontWeight: 600 }
                   : {}),
@@ -106,7 +107,10 @@ export function BottomNav() {
   if (pathname.startsWith("/employer")) return null;
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 border-t-2 border-[var(--color-divider)] bg-[var(--color-bg)] pb-[18px]">
+    <nav
+      className="fixed bottom-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 border-t-2 border-[var(--color-divider)] bg-[var(--color-bg)]"
+      style={{ paddingBottom: "max(18px, env(safe-area-inset-bottom))" }}
+    >
       <div className="grid grid-cols-4">
         {TABS.map(({ href, label, icon: Icon }, i) => {
           const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -114,9 +118,9 @@ export function BottomNav() {
             <Link
               key={href}
               href={href}
-              className={`relative flex flex-col items-center gap-1 px-0 py-3 no-underline ${
+              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-1 px-0 py-3 no-underline ${
                 i > 0 ? "border-l border-[var(--color-divider)]" : ""
-              } ${active ? "text-[var(--color-accent)]" : "text-[var(--color-neutral-600)]"}`}
+              } ${active ? "text-[var(--color-accent-700)]" : "text-[var(--color-neutral-600)]"}`}
             >
               {active ? (
                 <span className="absolute top-0 right-0 left-0 h-[3px] bg-[var(--color-accent)]" />

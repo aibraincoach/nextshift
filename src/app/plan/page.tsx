@@ -170,7 +170,7 @@ export default function PlanPage() {
           — exactly your chosen days of everyday spending — so one quiet day doesn&apos;t tip you
           into a shortfall. Days below that target are highlighted. Change your buffer and daily
           spending on the{" "}
-          <Link href="/needs" className="text-[var(--color-accent)] hover:underline">
+          <Link href="/needs" className="text-[var(--color-accent-700)] hover:underline">
             needs page
           </Link>
           .
@@ -178,7 +178,7 @@ export default function PlanPage() {
         {hasGap ? (
           <p className="mt-3 text-sm text-[var(--color-neutral-700)]">
             You still need {fmtMoney(plan.cashGapCad)} by {fmtDate(plan.gapDate!)}.{" "}
-            <Link href="/marketplace" className="text-[var(--color-accent)] hover:underline">
+            <Link href="/marketplace" className="text-[var(--color-accent-700)] hover:underline">
               Find a shift
             </Link>
           </p>
@@ -224,7 +224,7 @@ export default function PlanPage() {
       </section>
 
       <p className="mt-6 px-5 text-sm">
-        <Link href="/savings" className="text-[var(--color-accent)] hover:underline">
+        <Link href="/savings" className="text-[var(--color-accent-700)] hover:underline">
           Adjust savings rate
         </Link>
       </p>

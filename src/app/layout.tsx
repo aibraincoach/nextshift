@@ -38,7 +38,12 @@ export default function RootLayout({
           <div className="mx-auto flex min-h-full w-full max-w-md flex-col bg-[var(--color-bg)]">
             <TopBar />
             <DemoStrip />
-            <main className="flex-1 pb-24">{children}</main>
+            <main
+              className="flex-1"
+              style={{ paddingBottom: "calc(6rem + env(safe-area-inset-bottom, 0px))" }}
+            >
+              {children}
+            </main>
             <BottomNav />
           </div>
         </AppDataProvider>

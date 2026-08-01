@@ -57,7 +57,7 @@ export default function MarketplacePage() {
   }
   if (error) {
     return (
-      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent)]">
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
         Something went wrong: {error}
       </p>
     );

@@ -59,7 +59,7 @@ export function OpportunityCard({
       <div className="w-10 shrink-0 pt-0.5 text-center">
         <span
           className={`block text-[22px] leading-none tabular-nums ${
-            score.total === 100 ? "text-[var(--color-accent)]" : "text-[var(--color-text)]"
+            score.total === 100 ? "text-[var(--color-accent-700)]" : "text-[var(--color-text)]"
           }`}
           style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
         >

@@ -164,7 +164,7 @@ export default function SavingsPage() {
           ) : (
             <>
               No spare cash today without dipping below your buffer.{" "}
-              <Link href="/marketplace" className="text-[var(--color-accent)] hover:underline">
+              <Link href="/marketplace" className="text-[var(--color-accent-700)] hover:underline">
                 Find a shift
               </Link>{" "}
               to create headroom.
@@ -240,7 +240,7 @@ export default function SavingsPage() {
           </div>
         </dl>
         <p className="mt-4 text-sm">
-          <Link href="/plan" className="text-[var(--color-accent)] hover:underline">
+          <Link href="/plan" className="text-[var(--color-accent-700)] hover:underline">
             See full 7-day plan
           </Link>
         </p>

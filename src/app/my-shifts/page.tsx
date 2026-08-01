@@ -60,7 +60,7 @@ export default function MyShiftsPage() {
   }
   if (error) {
     return (
-      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent)]">
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
         Something went wrong: {error}
       </p>
     );
@@ -88,7 +88,7 @@ export default function MyShiftsPage() {
         {assigned.length === 0 ? (
           <p className="px-5 py-6 text-center text-xs text-muted">
             No upcoming assigned shifts.{" "}
-            <Link href="/marketplace" className="text-[var(--color-accent)]">
+            <Link href="/marketplace" className="text-[var(--color-accent-700)]">
               Find work →
             </Link>
           </p>
@@ -138,7 +138,7 @@ export default function MyShiftsPage() {
         {claimed.length === 0 ? (
           <p className="px-5 py-6 text-center text-xs text-muted">
             Nothing claimed yet.{" "}
-            <Link href="/marketplace" className="text-[var(--color-accent)]">
+            <Link href="/marketplace" className="text-[var(--color-accent-700)]">
               Find work →
             </Link>
           </p>
@@ -152,7 +152,7 @@ export default function MyShiftsPage() {
                 <div>
                   <Link
                     href={`/marketplace/${o.id}`}
-                    className="text-[17px] leading-tight text-[var(--color-text)] hover:text-[var(--color-accent)]"
+                    className="text-[17px] leading-tight text-[var(--color-text)] hover:text-[var(--color-accent-700)]"
                     style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
                   >
                     {o.role}
@@ -191,7 +191,7 @@ export default function MyShiftsPage() {
         {released.length === 0 ? (
           <p className="px-5 py-6 text-center text-xs text-muted">
             You haven&apos;t released any shifts.{" "}
-            <Link href="/marketplace" className="text-[var(--color-accent)]">
+            <Link href="/marketplace" className="text-[var(--color-accent-700)]">
               Find work →
             </Link>
           </p>

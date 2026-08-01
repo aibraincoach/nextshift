@@ -104,7 +104,7 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
   if (summary) {
     return (
       <div className="mx-5 border-2 border-[var(--color-divider)] bg-[var(--color-surface)] p-5">
-        <div className="mb-3 flex items-center gap-2 text-[var(--color-accent)]">
+        <div className="mb-3 flex items-center gap-2 text-[var(--color-accent-700)]">
           <CheckCircle2 className="h-5 w-5" />
           <p className="text-sm" style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}>
             {summary.type === "shift" ? "Shift" : "Job"} posted: {summary.role} ({summary.city})

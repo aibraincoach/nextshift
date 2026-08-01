@@ -15,7 +15,7 @@ export default function EmployerPage() {
   }
   if (error || !data) {
     return (
-      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent)]">
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
         Could not load data. {error ?? ""}
       </p>
     );

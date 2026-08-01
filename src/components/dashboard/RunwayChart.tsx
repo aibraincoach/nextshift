@@ -13,13 +13,12 @@ import {
 import type { DayProjection } from "@/types";
 import { fmtDate, fmtMoney } from "@/lib/engine/plan";
 
-const INK = "#201e1d";
-const ACCENT = "#ec3013";
-const NEUTRAL_200 = "#eae7e7";
-const NEUTRAL_500 = "#9b9797";
-const NEUTRAL_600 = "#7d7979";
-const SURFACE = "#eae9e9";
-const DIVIDER = "color-mix(in srgb, #201e1d 40%, transparent)";
+/** Read Modernist tokens so the chart cannot drift from the design system. */
+function cssVar(name: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
 
 export function RunwayChart({
   projection,
@@ -32,6 +31,14 @@ export function RunwayChart({
     ...d,
     label: fmtDate(d.date),
   }));
+
+  const ink = cssVar("--color-text", "#201e1d");
+  const accent = cssVar("--color-accent", "#ec3013");
+  const neutral200 = cssVar("--color-neutral-200", "#eae7e7");
+  const neutral500 = cssVar("--color-neutral-500", "#9b9797");
+  const neutral600 = cssVar("--color-neutral-600", "#7d7979");
+  const surface = cssVar("--color-surface", "#eae9e9");
+  const divider = cssVar("--color-divider", "rgba(32,30,29,0.4)");
 
   return (
     <section className="px-5 py-5">
@@ -47,20 +54,20 @@ export function RunwayChart({
           <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="runwayFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={NEUTRAL_200} stopOpacity={0.9} />
-                <stop offset="100%" stopColor={NEUTRAL_200} stopOpacity={0.2} />
+                <stop offset="0%" stopColor={neutral200} stopOpacity={0.9} />
+                <stop offset="100%" stopColor={neutral200} stopOpacity={0.2} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke={NEUTRAL_200} strokeDasharray="3 3" vertical={false} />
+            <CartesianGrid stroke={neutral200} strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fill: NEUTRAL_600, fontSize: 10 }}
+              tick={{ fill: neutral600, fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               interval={0}
             />
             <YAxis
-              tick={{ fill: NEUTRAL_600, fontSize: 10 }}
+              tick={{ fill: neutral600, fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               width={44}
@@ -68,25 +75,25 @@ export function RunwayChart({
             />
             <Tooltip
               contentStyle={{
-                background: SURFACE,
-                border: `1px solid ${DIVIDER}`,
+                background: surface,
+                border: `1px solid ${divider}`,
                 borderRadius: 0,
                 fontSize: 12,
-                color: INK,
+                color: ink,
               }}
-              labelStyle={{ color: NEUTRAL_500 }}
+              labelStyle={{ color: neutral500 }}
               formatter={(value) => [fmtMoney(Number(value ?? 0)), "Balance"]}
             />
             <ReferenceLine
               y={bufferTargetCad}
-              stroke={ACCENT}
+              stroke={accent}
               strokeDasharray="4 4"
               strokeWidth={1.5}
             />
             <Area
               type="monotone"
               dataKey="endingBalanceCad"
-              stroke={INK}
+              stroke={ink}
               strokeWidth={2}
               fill="url(#runwayFill)"
               isAnimationActive={false}
@@ -101,9 +108,7 @@ export function RunwayChart({
           Balance
         </span>
         <span className="inline-flex items-center gap-2">
-          <span
-            className="inline-block h-0 w-5 border-t-2 border-dashed border-[var(--color-accent)]"
-          />
+          <span className="inline-block h-0 w-5 border-t-2 border-dashed border-[var(--color-accent)]" />
           Buffer {fmtMoney(bufferTargetCad)}
         </span>
       </div>

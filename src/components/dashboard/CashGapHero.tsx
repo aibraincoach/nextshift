@@ -37,7 +37,7 @@ export function CashGapHero({ plan }: { plan: CashPlan }) {
     } else {
       kicker = `Goal shortfall · ${fmtDate(goal.byDate)}`;
       headline = (
-        <span className="tabular-nums text-[var(--color-accent)]">
+        <span className="tabular-nums text-[var(--color-accent-700)]">
           {fmtMoney(goal.shortfallCad)}
         </span>
       );
@@ -46,7 +46,7 @@ export function CashGapHero({ plan }: { plan: CashPlan }) {
   } else if (hasGap) {
     kicker = `Cash shortfall · ${fmtDate(plan.gapDate!)}`;
     headline = (
-      <span className="tabular-nums text-[var(--color-accent)]">
+      <span className="tabular-nums text-[var(--color-accent-700)]">
         {fmtMoney(plan.cashGapCad)}
       </span>
     );

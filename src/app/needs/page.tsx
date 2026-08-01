@@ -26,15 +26,21 @@ function SquareToggle({
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      className="relative h-[22px] w-10 shrink-0 border-0 p-0 transition-colors"
-      style={{
-        background: checked ? "var(--color-accent)" : "var(--color-neutral-300)",
-      }}
+      className="relative flex h-11 w-11 shrink-0 items-center justify-center border-0 bg-transparent p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
     >
+      {/* Visual switch matches mock (22×40); hit target is 44×44 */}
       <span
-        className="absolute top-[3px] h-4 w-4 bg-[var(--color-bg)] transition-all"
-        style={{ left: checked ? "21px" : "3px" }}
-      />
+        className="relative block h-[22px] w-10 transition-colors"
+        style={{
+          background: checked ? "var(--color-accent)" : "var(--color-neutral-300)",
+        }}
+        aria-hidden
+      >
+        <span
+          className="absolute top-[3px] h-4 w-4 bg-[var(--color-bg)] transition-all"
+          style={{ left: checked ? "21px" : "3px" }}
+        />
+      </span>
     </button>
   );
 }

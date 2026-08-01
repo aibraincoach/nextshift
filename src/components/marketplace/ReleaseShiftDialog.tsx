@@ -45,7 +45,7 @@ export function ReleaseShiftDialog({
           </div>
         ) : (
           <div className="flex gap-2.5 border-2 border-[var(--color-divider)] bg-[var(--color-surface)] p-3 text-sm text-[var(--color-text)]">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-accent)]" />
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-accent-700)]" />
             <p>You stay covered — releasing this shift doesn&apos;t create a cash gap.</p>
           </div>
         )}

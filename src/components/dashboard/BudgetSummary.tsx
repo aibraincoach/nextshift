@@ -24,7 +24,7 @@ export function BudgetSummary({
         </h2>
         <Link
           href="/needs"
-          className="text-xs no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent)]"
+          className="text-xs no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent-700)]"
           style={{ fontWeight: 600 }}
         >
           Edit needs →

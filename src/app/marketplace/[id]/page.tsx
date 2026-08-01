@@ -78,7 +78,7 @@ export default function OpportunityDetailPage() {
   }
   if (error) {
     return (
-      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent)]">
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
         Something went wrong: {error}
       </p>
     );
@@ -214,7 +214,7 @@ export default function OpportunityDetailPage() {
               <div
                 className={`mt-1 text-lg tabular-nums ${
                   impact.gapAfterCad === 0
-                    ? "text-[var(--color-accent)]"
+                    ? "text-[var(--color-accent-700)]"
                     : "text-[var(--color-text)]"
                 }`}
                 style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
@@ -230,7 +230,7 @@ export default function OpportunityDetailPage() {
           ) : null}
           <div className="mt-3 space-y-1 text-xs text-muted">
             {impact.closesGap ? (
-              <p className="font-medium text-[var(--color-accent)]">Closes your goal completely.</p>
+              <p className="font-medium text-[var(--color-accent-700)]">Closes your goal completely.</p>
             ) : null}
             <p>
               Pays on {fmtDate(payoutDate)}
@@ -251,7 +251,7 @@ export default function OpportunityDetailPage() {
               <div className="text-[10px] uppercase tracking-[0.08em] text-muted">Gap before</div>
               <div
                 className={`mt-1 text-lg tabular-nums ${
-                  impact.gapBeforeCad > 0 ? "text-[var(--color-accent)]" : "text-[var(--color-text)]"
+                  impact.gapBeforeCad > 0 ? "text-[var(--color-accent-700)]" : "text-[var(--color-text)]"
                 }`}
                 style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
               >
@@ -263,7 +263,7 @@ export default function OpportunityDetailPage() {
               <div
                 className={`mt-1 text-lg tabular-nums ${
                   impact.gapAfterCad === 0
-                    ? "text-[var(--color-accent)]"
+                    ? "text-[var(--color-accent-700)]"
                     : impact.gapAfterCad > 0
                       ? "text-[var(--color-accent-700)]"
                       : "text-[var(--color-text)]"
@@ -276,7 +276,7 @@ export default function OpportunityDetailPage() {
           </div>
           <div className="mt-3 space-y-1 text-xs text-muted">
             {impact.closesGap ? (
-              <p className="font-medium text-[var(--color-accent)]">
+              <p className="font-medium text-[var(--color-accent-700)]">
                 Closes your cash gap completely.
               </p>
             ) : null}
@@ -297,7 +297,7 @@ export default function OpportunityDetailPage() {
               className="flex items-center gap-1.5 text-[17px] text-[var(--color-text)]"
               style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
             >
-              <Zap className="h-3.5 w-3.5 text-[var(--color-accent)]" /> Advance vs this shift
+              <Zap className="h-3.5 w-3.5 text-[var(--color-accent-700)]" /> Advance vs this shift
             </h2>
             <p className="mt-1 text-xs text-muted">
               You have a <span className="tabular-nums">{fmtMoney(ewa.gapCad)}</span> gap. Two ways
@@ -344,7 +344,7 @@ export default function OpportunityDetailPage() {
                       </span>{" "}
                       earned
                     </p>
-                    <p className="text-[var(--color-accent)]">No fee</p>
+                    <p className="text-[var(--color-accent-700)]">No fee</p>
                     <p>Paid {fmtDate(ewa.shift.payoutDate)}</p>
                     <p>
                       Gap left:{" "}

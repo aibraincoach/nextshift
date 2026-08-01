@@ -11,7 +11,7 @@ export function ClaimButton({ opportunityId }: { opportunityId: string }) {
     return (
       <div>
         <div className="flex items-center gap-2 border-2 border-[var(--color-divider)] bg-[var(--color-surface)] px-4 py-3 text-sm">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--color-accent)]" />
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--color-accent-700)]" />
           <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}>
             Claimed — pending employer approval
           </span>
