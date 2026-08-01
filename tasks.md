@@ -63,10 +63,14 @@ Tick with a timestamp when done. Add discovered tasks under the right area.
 - [x] `/marketplace` list + detail + my-shifts + light employer pass (2026-08-01 06:45)
 - [x] Build green; no hard-coded Modernist hexes in Tailwind theme (2026-08-01 06:45)
 
+## Cover sheet (feature/cover-sheet)
+- [x] Cover landing at `/`; Today dashboard moved to `/today`; nav/chrome updates (2026-08-01 13:55)
+- [x] Metadata + CTAs (demo, GitHub, build story); production build green (2026-08-01 13:55)
+
 ## Integration (owner: main agent)
 - [x] Verify npx next build green after merges
 - [x] Demo walkthrough check: claim OP-017 closes W-0014 gap; release Saturday shift warns
 - [x] Push to GitHub / Vercel live at nextshift.vercel.app
 - [x] Merge Modernist redesign PR #4 (2026-08-01)
 - [x] Docs lifespan catalog updated through cover sheet + credits (2026-08-01)
-- [ ] Merge docs PR #5, then cover sheet PR #6
+- [x] Merge docs PR #5, then cover sheet PR #6 (2026-08-01)

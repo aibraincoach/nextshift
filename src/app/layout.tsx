@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
 import "./globals.css";
 import { AppDataProvider } from "@/lib/data/useAppData";
-import { BottomNav, DemoStrip, TopBar } from "@/components/shared/Nav";
+import { AppChrome } from "@/components/shared/AppChrome";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -13,9 +13,9 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: "NextShift",
+  title: "NextShift — Know what you need. Find what pays.",
   description:
-    "NextShift turns a worker's cash-flow gap into an earnings plan, then matches shifts and jobs that close it.",
+    "Hackathon prototype from Cursor Calgary (July 29, 2026) by RayRayRay Tan and Mandeep Saini. Turns a cash shortfall into matched work.",
 };
 
 export default function RootLayout({
@@ -35,17 +35,7 @@ export default function RootLayout({
         }
       >
         <AppDataProvider>
-          <div className="mx-auto flex min-h-full w-full max-w-md flex-col bg-[var(--color-bg)]">
-            <TopBar />
-            <DemoStrip />
-            <main
-              className="flex-1"
-              style={{ paddingBottom: "calc(6rem + env(safe-area-inset-bottom, 0px))" }}
-            >
-              {children}
-            </main>
-            <BottomNav />
-          </div>
+          <AppChrome>{children}</AppChrome>
         </AppDataProvider>
       </body>
     </html>
