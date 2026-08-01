@@ -63,6 +63,10 @@ Tick with a timestamp when done. Add discovered tasks under the right area.
 - [x] `/marketplace` list + detail + my-shifts + light employer pass (2026-08-01 06:45)
 - [x] Build green; no hard-coded Modernist hexes in Tailwind theme (2026-08-01 06:45)
 
+## Cover sheet (feature/cover-sheet)
+- [x] Cover landing at `/`; Today dashboard moved to `/today`; nav/chrome updates (2026-08-01 13:55)
+- [x] Metadata + CTAs (demo, GitHub, build story); production build green (2026-08-01 13:55)
+
 ## Integration (owner: main agent)
 - [ ] Verify npx next build green after merges
 - [ ] Demo walkthrough check: claim OP-001 closes W-0014 gap; release Saturday shift warns

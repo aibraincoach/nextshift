@@ -14,7 +14,7 @@ import { useAppData } from "@/lib/data/useAppData";
 import { useDemoState } from "@/lib/storage/demoState";
 
 const TABS = [
-  { href: "/", label: "Today", icon: Home },
+  { href: "/today", label: "Today", icon: Home },
   { href: "/plan", label: "Plan", icon: TrendingUp },
   { href: "/marketplace", label: "Find work", icon: Search },
   { href: "/my-shifts", label: "My shifts", icon: CalendarDays },
@@ -26,12 +26,22 @@ const PERSONA_LABELS: Record<string, string> = {
   "W-0183": "Event staff",
 };
 
+function isCover(pathname: string) {
+  return pathname === "/";
+}
+
 export function TopBar() {
   const pathname = usePathname();
   const employer = pathname.startsWith("/employer");
+  const cover = isCover(pathname);
+
   return (
     <header className="sticky top-0 z-40 border-b-2 border-[var(--color-divider)] bg-[var(--color-bg)]">
-      <div className="flex items-center justify-between px-5 py-3.5">
+      <div
+        className={`mx-auto flex items-center justify-between px-5 py-3.5 ${
+          cover ? "max-w-2xl" : "max-w-md"
+        }`}
+      >
         <Link href="/" className="flex items-center gap-2 no-underline">
           <span className="h-3 w-3 bg-[var(--color-accent)]" />
           <span
@@ -41,13 +51,22 @@ export function TopBar() {
             NextShift
           </span>
         </Link>
-        <Link
-          href={employer ? "/" : "/employer"}
-          className="inline-flex items-center gap-1.5 text-xs text-[var(--color-neutral-700)] no-underline hover:text-[var(--color-text)]"
-        >
-          <Building2 size={13} strokeWidth={2} />
-          {employer ? "Worker view" : "Employer view"}
-        </Link>
+        {cover ? (
+          <Link
+            href="/today"
+            className="inline-flex min-h-11 items-center px-2 text-xs font-semibold text-[var(--color-accent-700)] no-underline"
+          >
+            Enter demo →
+          </Link>
+        ) : (
+          <Link
+            href={employer ? "/today" : "/employer"}
+            className="inline-flex min-h-11 items-center gap-1.5 px-2 text-xs text-[var(--color-neutral-700)] no-underline hover:text-[var(--color-text)]"
+          >
+            <Building2 size={13} strokeWidth={2} />
+            {employer ? "Worker view" : "Employer view"}
+          </Link>
+        )}
       </div>
     </header>
   );
@@ -57,10 +76,10 @@ export function DemoStrip() {
   const pathname = usePathname();
   const { data, worker } = useAppData();
   const { update, reset } = useDemoState();
-  if (pathname.startsWith("/employer") || !data) return null;
+  if (isCover(pathname) || pathname.startsWith("/employer") || !data) return null;
 
   return (
-    <div className="flex items-center gap-2.5 border-b border-[var(--color-divider)] bg-[var(--color-surface)] px-5 py-2">
+    <div className="mx-auto flex w-full max-w-md items-center gap-2.5 border-b border-[var(--color-divider)] bg-[var(--color-surface)] px-5 py-2">
       <span
         className="text-[10px] tracking-[0.12em] text-[var(--color-accent-700)]"
         style={{ fontWeight: 800 }}
@@ -104,7 +123,7 @@ export function DemoStrip() {
 
 export function BottomNav() {
   const pathname = usePathname();
-  if (pathname.startsWith("/employer")) return null;
+  if (isCover(pathname) || pathname.startsWith("/employer")) return null;
 
   return (
     <nav
@@ -113,7 +132,7 @@ export function BottomNav() {
     >
       <div className="grid grid-cols-4">
         {TABS.map(({ href, label, icon: Icon }, i) => {
-          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          const active = pathname === href || pathname.startsWith(`${href}/`);
           return (
             <Link
               key={href}
