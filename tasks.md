@@ -68,7 +68,9 @@ Tick with a timestamp when done. Add discovered tasks under the right area.
 - [x] Metadata + CTAs (demo, GitHub, build story); production build green (2026-08-01 13:55)
 
 ## Integration (owner: main agent)
-- [ ] Verify npx next build green after merges
-- [ ] Demo walkthrough check: claim OP-001 closes W-0014 gap; release Saturday shift warns
-- [ ] Push to GitHub
-- [ ] Deploy to Vercel (waiting on user credentials/info)
+- [x] Verify npx next build green after merges
+- [x] Demo walkthrough check: claim OP-017 closes W-0014 gap; release Saturday shift warns
+- [x] Push to GitHub / Vercel live at nextshift.vercel.app
+- [x] Merge Modernist redesign PR #4 (2026-08-01)
+- [x] Docs lifespan catalog updated through cover sheet + credits (2026-08-01)
+- [ ] Merge docs PR #5, then cover sheet PR #6
