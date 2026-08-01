@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NextShift
 
-## Getting Started
+**Know what you need. Find what pays.**
 
-First, run the development server:
+NextShift turns a worker’s cash-flow gap into an earnings plan, then matches shifts, jobs, and coworker-released shifts that close it.
+
+Live demo: **[nextshift.vercel.app](https://nextshift.vercel.app/)**  
+Built at **Cursor Calgary** · **July 29, 2026** · **RayRayRay Tan** and **Mandeep Saini**
+
+## What it is
+
+A static Next.js hackathon prototype (no auth, no backend). Workers see exact shortfall dates from anonymized Alberta cash-flow data, set needs and goals, and claim marketplace opportunities that improve their runway. Employers see staffing demand and claims without private budget details. Marketplace listings are synthetic demo fixtures.
+
+## Stack
+
+- Next.js App Router · TypeScript · Tailwind CSS
+- Client-side data from `public/generated/app-data.json` (built from CSVs)
+- Recharts · lucide-react · localStorage demo state
+- Deployed on Vercel
+
+## Local development
 
 ```bash
+npm install
+node scripts/normalize-data.mjs   # regenerate app-data.json if CSVs change
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Cover sheet is `/`; enter the demo at `/today`. Use the DEMO strip to switch personas and Reset.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Docs
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Doc | Purpose |
+| --- | --- |
+| [docs/LIFESPAN.md](docs/LIFESPAN.md) | **Full project history** — PRs, reviews, architecture, demo script |
+| [BUILD_PLAN.md](BUILD_PLAN.md) | Original product brief and MVP scope |
+| [planning.md](planning.md) | Architecture + shared contract for agents |
+| [AGENTS.md](AGENTS.md) | Rules for coding agents |
+| [tasks.md](tasks.md) | Living checklist |
 
-## Learn More
+## Routes
 
-To learn more about Next.js, take a look at the following resources:
+| Path | Role |
+| --- | --- |
+| `/` | Project cover sheet |
+| `/today` | Today — goal, shortfall, runway, close gap |
+| `/plan` | Day-by-day cash plan |
+| `/needs` | Buffer, spend, obligations, goal |
+| `/savings` | Pay-yourself-first |
+| `/marketplace` | Shifts / Jobs / Swaps |
+| `/my-shifts` | Assigned, claimed, released |
+| `/employer` | Employer dashboard (mock) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Hackathon demo project.
