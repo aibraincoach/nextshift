@@ -212,11 +212,7 @@ export default function OpportunityDetailPage() {
             <div className="border-2 border-[var(--color-divider)] bg-[var(--color-surface)] p-3">
               <div className="text-[10px] uppercase tracking-[0.08em] text-muted">After</div>
               <div
-                className={`mt-1 text-lg tabular-nums ${
-                  impact.gapAfterCad === 0
-                    ? "text-[var(--color-accent-700)]"
-                    : "text-[var(--color-text)]"
-                }`}
+                className="mt-1 text-lg tabular-nums text-[var(--color-text)]"
                 style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
               >
                 {impact.gapAfterCad === 0 ? "Goal met" : `${fmtMoney(impact.gapAfterCad)} short`}

@@ -79,7 +79,7 @@ export function DemoStrip() {
               style={{
                 padding: "5px 10px",
                 fontSize: 11,
-                minHeight: 32, /* compact DEMO strip; main form segs stay 44px */
+                minHeight: 44,
                 ...(active
                   ? { background: "var(--color-accent)", color: "var(--color-bg)", fontWeight: 600 }
                   : {}),
@@ -93,7 +93,7 @@ export function DemoStrip() {
       <button
         type="button"
         onClick={reset}
-        className="ml-auto inline-flex items-center gap-1.5 text-[11px] text-[var(--color-neutral-700)] hover:text-[var(--color-text)]"
+        className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-2 text-[11px] text-[var(--color-neutral-700)] hover:text-[var(--color-text)]"
       >
         <RotateCcw size={12} strokeWidth={2} />
         Reset

@@ -311,7 +311,13 @@ export default function NeedsPage() {
         )}
       </section>
 
-      <div className="fixed inset-x-0 bottom-[84px] z-10 mx-auto max-w-md px-5">
+      <div
+        className="fixed inset-x-0 z-10 mx-auto max-w-md px-5"
+        style={{
+          // Sit above the tab bar (≈44px + 18px pad) and the device home indicator.
+          bottom: "calc(62px + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         <div className="border border-[var(--color-divider)] bg-[var(--color-surface)] p-4">
           {hasGap ? (
             <p className="text-sm text-[var(--color-text)]">

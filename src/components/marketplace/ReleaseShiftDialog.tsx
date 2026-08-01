@@ -24,9 +24,16 @@ export function ReleaseShiftDialog({
 }) {
   const shortfall = Math.abs(Math.round((impact.gapAfterCad - impact.gapBeforeCad) * 100) / 100);
   return (
-    <div className="dialog-backdrop" role="dialog" aria-modal="true">
+    <div
+      className="dialog-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="release-shift-dialog-title"
+    >
       <div className="dialog !rounded-none">
-        <h2 className="dialog-title">Release this shift?</h2>
+        <h2 id="release-shift-dialog-title" className="dialog-title">
+          Release this shift?
+        </h2>
         <p className="dialog-body">
           {shift.role} at {shift.employerName} · {fmtDate(shift.date)} ·{" "}
           <span className="tabular-nums">{fmtMoney(shift.estimatedNetCad)}</span> net
