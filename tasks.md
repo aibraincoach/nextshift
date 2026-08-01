@@ -73,4 +73,4 @@ Tick with a timestamp when done. Add discovered tasks under the right area.
 - [x] Push to GitHub / Vercel live at nextshift.vercel.app
 - [x] Merge Modernist redesign PR #4 (2026-08-01)
 - [x] Docs lifespan catalog updated through cover sheet + credits (2026-08-01)
-- [ ] Merge docs PR #5, then cover sheet PR #6
+- [x] Merge docs PR #5, then cover sheet PR #6 (2026-08-01)

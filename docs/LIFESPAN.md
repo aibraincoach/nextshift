@@ -178,7 +178,7 @@ Updated at project close to include PR #4 merge, cover sheet PR #6, credits, and
 
 ---
 
-### PR #6 — Project cover sheet ([open](https://github.com/aibraincoach/nextshift/pull/6) → merge after #5)
+### PR #6 — Project cover sheet ([merged](https://github.com/aibraincoach/nextshift/pull/6))
 
 **Branch:** `feature/cover-sheet`  
 **Intent:** Finish the hackathon surface with a polished project cover at `/` without redesigning or extending product logic.
@@ -260,8 +260,8 @@ recalculated runway (localStorage)
 | [#2](https://github.com/aibraincoach/nextshift/pull/2) | Budget-first hierarchy | Merged |
 | [#3](https://github.com/aibraincoach/nextshift/pull/3) | Goal-first (“I need $X by DATE”) | Merged |
 | [#4](https://github.com/aibraincoach/nextshift/pull/4) | Modernist mobile redesign | Merged |
-| [#5](https://github.com/aibraincoach/nextshift/pull/5) | Lifespan docs catalog | This PR |
-| [#6](https://github.com/aibraincoach/nextshift/pull/6) | Cover sheet at `/`; Today → `/today` | Open (merge after #5) |
+| [#5](https://github.com/aibraincoach/nextshift/pull/5) | Lifespan docs catalog | Merged |
+| [#6](https://github.com/aibraincoach/nextshift/pull/6) | Cover sheet at `/`; Today → `/today` | Merged |
 
 ---
 

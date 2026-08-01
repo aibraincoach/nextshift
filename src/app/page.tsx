@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const GITHUB = "https://github.com/aibraincoach/nextshift";
 const BUILD_STORY =
-  "https://github.com/aibraincoach/nextshift/blob/docs/lifespan-catalog/docs/LIFESPAN.md";
+  "https://github.com/aibraincoach/nextshift/blob/main/docs/LIFESPAN.md";
 
 export default function CoverSheetPage() {
   return (
