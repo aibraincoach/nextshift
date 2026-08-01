@@ -6,7 +6,7 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 export const metadata: Metadata = {
   title: "NextShift — Know what you need. Find what pays.",
   description:
-    "Hackathon prototype from Cursor Calgary (July 29, 2026). Turns a cash shortfall into matched shifts and jobs — built by Raj “Ray” Tan and Mandeep.",
+    "Hackathon prototype from Cursor Calgary (July 29, 2026). Turns a cash shortfall into matched shifts and jobs — built by RayRayRay Tan and Mandeep.",
 };
 
 const GITHUB = "https://github.com/aibraincoach/nextshift";
@@ -38,7 +38,7 @@ export default function CoverSheetPage() {
         </p>
         <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--color-neutral-700)]">
           Created by{" "}
-          <span className="font-semibold text-[var(--color-text)]">Raj “Ray” Tan</span> and{" "}
+          <span className="font-semibold text-[var(--color-text)]">RayRayRay Tan</span> and{" "}
           <span className="font-semibold text-[var(--color-text)]">Mandeep</span>
         </p>
 
