@@ -15,7 +15,7 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   title: "NextShift — Know what you need. Find what pays.",
   description:
-    "Hackathon prototype from Cursor Calgary (July 29, 2026) by RayRayRay Tan and Mandeep. Turns a cash shortfall into matched work.",
+    "Hackathon prototype from Cursor Calgary (July 29, 2026) by RayRayRay Tan and Mandeep Saini. Turns a cash shortfall into matched work.",
 };
 
 export default function RootLayout({
