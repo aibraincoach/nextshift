@@ -31,9 +31,14 @@ export function computeMarketStats(data: AppData): MarketStats {
 
 function StatTile({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-3">
-      <p className="text-2xl font-semibold text-zinc-100">{value}</p>
-      <p className="mt-1 text-xs leading-snug text-zinc-500">{label}</p>
+    <div className="border-2 border-[var(--color-divider)] bg-[var(--color-surface)] p-3">
+      <p
+        className="text-2xl tabular-nums text-[var(--color-text)]"
+        style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+      >
+        {value}
+      </p>
+      <p className="mt-1 text-xs leading-snug text-muted">{label}</p>
     </div>
   );
 }
@@ -42,8 +47,11 @@ export function MarketSnapshot({ data }: { data: AppData }) {
   const stats = useMemo(() => computeMarketStats(data), [data]);
 
   return (
-    <section className="mb-6">
-      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-400">
+    <section className="mb-6 px-5">
+      <h2
+        className="mb-2 text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent-700)]"
+        style={{ fontWeight: 800 }}
+      >
         Labour market snapshot
       </h2>
       <div className="grid grid-cols-3 gap-2">
@@ -51,7 +59,7 @@ export function MarketSnapshot({ data }: { data: AppData }) {
         <StatTile label="Predicted cash gap within 7 days" value={stats.withGap} />
         <StatTile label="In Calgary with a gap" value={stats.calgaryWithGap} />
       </div>
-      <p className="mt-2 text-xs text-zinc-600">
+      <p className="mt-2 text-xs text-muted">
         Aggregate counts only. Workers&apos; budgets are never shared.
       </p>
     </section>

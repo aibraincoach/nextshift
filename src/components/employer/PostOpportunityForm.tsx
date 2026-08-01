@@ -32,10 +32,6 @@ function daysBetween(fromIso: string, toIso: string): number {
   );
 }
 
-const inputCls =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-zinc-500";
-const labelCls = "mb-1 block text-xs font-medium text-zinc-400";
-
 export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoToday: string }) {
   const { postOpportunity } = useDemoState();
   const stats = useMemo(() => computeMarketStats(data), [data]);
@@ -107,35 +103,32 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
 
   if (summary) {
     return (
-      <div className="rounded-xl border border-emerald-500/30 bg-zinc-900 p-5">
-        <div className="mb-3 flex items-center gap-2 text-emerald-400">
+      <div className="mx-5 border-2 border-[var(--color-divider)] bg-[var(--color-surface)] p-5">
+        <div className="mb-3 flex items-center gap-2 text-[var(--color-accent)]">
           <CheckCircle2 className="h-5 w-5" />
-          <p className="text-sm font-semibold">
+          <p className="text-sm" style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}>
             {summary.type === "shift" ? "Shift" : "Job"} posted: {summary.role} ({summary.city})
           </p>
         </div>
-        <div className="space-y-1.5 text-sm text-zinc-300">
+        <div className="space-y-1.5 text-sm text-[var(--color-text)]">
           <p>
-            <span className="font-semibold text-zinc-100">{summary.eligible}</span> eligible
-            workers in {summary.city}
+            <span className="tabular-nums font-semibold">{summary.eligible}</span> eligible workers
+            in {summary.city}
           </p>
           <p>
-            <span className="font-semibold text-zinc-100">{summary.withGap}</span> have a
-            predicted cash gap within seven days
+            <span className="tabular-nums font-semibold">{summary.withGap}</span> have a predicted
+            cash gap within seven days
           </p>
           <p>
-            <span className="font-semibold text-zinc-100">{summary.roleCityMatch}</span> match
-            the role and city
+            <span className="tabular-nums font-semibold">{summary.roleCityMatch}</span> match the
+            role and city
           </p>
         </div>
-        <p className="mt-3 text-xs text-zinc-600">
+        <p className="mt-3 text-xs text-muted">
           Aggregate counts only. Workers&apos; budgets are never shared.
         </p>
         <div className="mt-4 flex gap-3">
-          <Link
-            href="/marketplace"
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
-          >
+          <Link href="/marketplace" className="btn btn-primary">
             View in marketplace
           </Link>
           <button
@@ -144,7 +137,7 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
               setSummary(null);
               setRole("");
             }}
-            className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800"
+            className="btn btn-secondary"
           >
             Post another
           </button>
@@ -159,43 +152,39 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
       : Math.round(rate * hoursPerWeek * 0.82);
 
   return (
-    <div>
-      <div className="mb-4 flex gap-2">
+    <div className="px-5">
+      <div className="seg mb-4 w-full">
         {(["shift", "job"] as const).map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setTab(t)}
-            className={`rounded-lg px-4 py-2 text-sm font-medium ${
-              tab === t
-                ? "bg-zinc-800 text-zinc-100"
-                : "border border-zinc-800 text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
+          <label key={t} className="seg-opt flex-1 justify-center">
+            <input
+              type="radio"
+              name="post-tab"
+              checked={tab === t}
+              onChange={() => setTab(t)}
+            />
             {t === "shift" ? "Post shift" : "Post job"}
-          </button>
+          </label>
         ))}
       </div>
 
-      <form onSubmit={submit} className="space-y-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-        <div>
-          <label className={labelCls} htmlFor="role">
-            Role
-          </label>
+      <form
+        onSubmit={submit}
+        className="space-y-4 border-2 border-[var(--color-divider)] bg-[var(--color-surface)] p-4"
+      >
+        <div className="field">
+          <label htmlFor="role">Role</label>
           <input
             id="role"
-            className={inputCls}
+            className="input"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             placeholder={tab === "shift" ? "e.g. Warehouse associate" : "e.g. Forklift operator"}
             required
           />
         </div>
-        <div>
-          <label className={labelCls} htmlFor="city">
-            City
-          </label>
-          <select id="city" className={inputCls} value={city} onChange={(e) => setCity(e.target.value)}>
+        <div className="field">
+          <label htmlFor="city">City</label>
+          <select id="city" className="input" value={city} onChange={(e) => setCity(e.target.value)}>
             {CITIES.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -206,14 +195,12 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
 
         {tab === "shift" ? (
           <>
-            <div>
-              <label className={labelCls} htmlFor="date">
-                Date
-              </label>
+            <div className="field">
+              <label htmlFor="date">Date</label>
               <input
                 id="date"
                 type="date"
-                className={inputCls}
+                className="input"
                 value={date}
                 min={demoToday}
                 onChange={(e) => setDate(e.target.value)}
@@ -221,30 +208,26 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className={labelCls} htmlFor="start">
-                  Start hour (0–23)
-                </label>
+              <div className="field">
+                <label htmlFor="start">Start hour (0–23)</label>
                 <input
                   id="start"
                   type="number"
                   min={0}
                   max={23}
-                  className={inputCls}
+                  className="input"
                   value={startHour}
                   onChange={(e) => setStartHour(Number(e.target.value))}
                 />
               </div>
-              <div>
-                <label className={labelCls} htmlFor="end">
-                  End hour (use 24+ for past midnight, e.g. 29 = 5 AM)
-                </label>
+              <div className="field">
+                <label htmlFor="end">End hour (use 24+ for past midnight)</label>
                 <input
                   id="end"
                   type="number"
                   min={0}
                   max={47}
-                  className={inputCls}
+                  className="input"
                   value={endHour}
                   onChange={(e) => setEndHour(Number(e.target.value))}
                 />
@@ -252,47 +235,40 @@ export function PostOpportunityForm({ data, demoToday }: { data: AppData; demoTo
             </div>
           </>
         ) : (
-          <div>
-            <label className={labelCls} htmlFor="hpw">
-              Hours per week
-            </label>
+          <div className="field">
+            <label htmlFor="hpw">Hours per week</label>
             <input
               id="hpw"
               type="number"
               min={1}
               max={60}
-              className={inputCls}
+              className="input"
               value={hoursPerWeek}
               onChange={(e) => setHoursPerWeek(Number(e.target.value))}
             />
           </div>
         )}
 
-        <div>
-          <label className={labelCls} htmlFor="rate">
-            Hourly rate (CAD)
-          </label>
+        <div className="field">
+          <label htmlFor="rate">Hourly rate (CAD)</label>
           <input
             id="rate"
             type="number"
             min={15}
             max={80}
             step="0.5"
-            className={inputCls}
+            className="input"
             value={rate}
             onChange={(e) => setRate(Number(e.target.value))}
           />
         </div>
 
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-muted">
           Estimated {tab === "shift" ? "net pay" : "weekly net"} for workers:{" "}
-          <span className="font-medium text-zinc-300">{fmtMoney(estNet)}</span>
+          <span className="font-medium text-[var(--color-text)]">{fmtMoney(estNet)}</span>
         </p>
 
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-500"
-        >
+        <button type="submit" className="btn btn-primary btn-block">
           {tab === "shift" ? "Post shift" : "Post job"}
         </button>
       </form>

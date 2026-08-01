@@ -14,37 +14,63 @@ export function BudgetSummary({
   const nextObl = plan.upcomingObligations[0];
 
   return (
-    <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold text-zinc-200">Your budget</h2>
+    <section className="px-5 py-5">
+      <div className="flex items-baseline justify-between gap-2">
+        <h2
+          className="text-base text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Your budget
+        </h2>
         <Link
           href="/needs"
-          className="text-xs font-medium text-emerald-400 hover:text-emerald-300"
+          className="text-xs no-underline text-[var(--color-accent-700)] hover:text-[var(--color-accent)]"
+          style={{ fontWeight: 600 }}
         >
-          Edit needs
+          Edit needs →
         </Link>
       </div>
-      <div className="mt-3 grid grid-cols-3 gap-2">
+
+      <div className="mt-4 grid grid-cols-3 gap-3">
         <div>
-          <div className="text-[11px] uppercase tracking-wide text-zinc-500">Buffer</div>
-          <div className="mt-0.5 text-sm font-semibold tabular-nums text-zinc-100">
+          <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--color-neutral-500)]">
+            Buffer
+          </div>
+          <div
+            className="mt-1 text-base tabular-nums text-[var(--color-text)]"
+            style={{ fontWeight: 800 }}
+          >
             {fmtMoney(plan.bufferTargetCad)}
           </div>
         </div>
         <div>
-          <div className="text-[11px] uppercase tracking-wide text-zinc-500">Daily spend</div>
-          <div className="mt-0.5 text-sm font-semibold tabular-nums text-zinc-100">
+          <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--color-neutral-500)]">
+            Daily spend
+          </div>
+          <div
+            className="mt-1 text-base tabular-nums text-[var(--color-text)]"
+            style={{ fontWeight: 800 }}
+          >
             {fmtMoney(dailySpendCad)}
           </div>
         </div>
         <div>
-          <div className="text-[11px] uppercase tracking-wide text-zinc-500">Next bill</div>
-          <div className="mt-0.5 text-sm font-semibold tabular-nums text-zinc-100">
+          <div className="text-[10px] uppercase tracking-[0.08em] text-[var(--color-neutral-500)]">
+            Next bill
+          </div>
+          <div
+            className="mt-1 text-base tabular-nums text-[var(--color-text)]"
+            style={{ fontWeight: 800 }}
+          >
             {nextObl ? fmtMoney(nextObl.amountCad) : "—"}
           </div>
-          <div className="text-[11px] text-zinc-500 truncate">
-            {nextObl ? `${nextObl.name} · ${fmtDate(nextObl.date)}` : "None soon"}
-          </div>
+          {nextObl ? (
+            <div className="mt-0.5 truncate text-[11px] text-[var(--color-neutral-600)]">
+              {nextObl.name} · {fmtDate(nextObl.date)}
+            </div>
+          ) : (
+            <div className="mt-0.5 text-[11px] text-[var(--color-neutral-500)]">None soon</div>
+          )}
         </div>
       </div>
     </section>

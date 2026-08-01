@@ -76,11 +76,11 @@ export function GoalFormFields({
   };
 
   return (
-    <div className="space-y-3">
-      <p className="text-sm text-zinc-300">
+    <div className="mt-4 space-y-4">
+      <p className="text-sm text-[var(--color-text)]">
         I need{" "}
         <span className="inline-flex items-center align-middle">
-          <span className="text-zinc-500">$</span>
+          <span className="text-[var(--color-neutral-500)]">$</span>
           <input
             type="number"
             inputMode="decimal"
@@ -88,7 +88,8 @@ export function GoalFormFields({
             value={amountText}
             onChange={(e) => setAmountText(e.target.value)}
             aria-label="Goal amount in CAD"
-            className="mx-0.5 w-20 rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-sm font-semibold tabular-nums text-zinc-100 outline-none focus:border-emerald-500/60"
+            className="input mx-1 inline-block w-[88px] tabular-nums"
+            style={{ fontWeight: 800 }}
           />
         </span>{" "}
         by{" "}
@@ -99,14 +100,11 @@ export function GoalFormFields({
           value={date}
           onChange={(e) => setDate(e.target.value)}
           aria-label="Goal date"
-          className="rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-sm font-semibold text-zinc-100 outline-none focus:border-emerald-500/60"
+          className="input inline-block w-auto"
+          style={{ fontWeight: 600 }}
         />
       </p>
-      <button
-        type="button"
-        onClick={onSubmit}
-        className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950 hover:bg-emerald-400"
-      >
+      <button type="button" onClick={onSubmit} className="btn btn-primary">
         Set goal
       </button>
     </div>
@@ -136,33 +134,31 @@ export function GoalSetter({
 
   if (hasGoal && !editing) {
     return (
-      <section className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zinc-800 bg-zinc-900/60 px-4 py-3">
-        <p className="text-sm text-zinc-200">
-          Goal:{" "}
-          <span className="font-semibold tabular-nums text-zinc-50">
-            {fmtMoney(needs.goalAmountCad!)}
-          </span>{" "}
-          by{" "}
-          <span className="font-semibold text-zinc-50">{fmtDate(needs.goalByDate!)}</span>
-        </p>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => setEditing(true)}
-            className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:border-zinc-600"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setNeeds(workerId, { goalAmountCad: undefined, goalByDate: undefined });
-              setEditing(false);
-            }}
-            className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-400 hover:border-zinc-600 hover:text-zinc-300"
-          >
-            Clear
-          </button>
+      <section className="px-5 py-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-[var(--color-text)]">
+            Goal:{" "}
+            <span className="tabular-nums" style={{ fontWeight: 800 }}>
+              {fmtMoney(needs.goalAmountCad!)}
+            </span>{" "}
+            by{" "}
+            <span style={{ fontWeight: 800 }}>{fmtDate(needs.goalByDate!)}</span>
+          </p>
+          <div className="flex gap-2">
+            <button type="button" onClick={() => setEditing(true)} className="btn btn-secondary">
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setNeeds(workerId, { goalAmountCad: undefined, goalByDate: undefined });
+                setEditing(false);
+              }}
+              className="btn btn-ghost"
+            >
+              Clear
+            </button>
+          </div>
         </div>
       </section>
     );
@@ -172,21 +168,24 @@ export function GoalSetter({
   const formDate = hasGoal ? needs.goalByDate! : prefill.byDate;
 
   return (
-    <section className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-      <h2 className="text-sm font-semibold text-emerald-300">What do you need?</h2>
-      <p className="mt-1 text-xs text-zinc-500">
+    <section className="px-5 py-5">
+      <h2
+        className="text-base text-[var(--color-text)]"
+        style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+      >
+        What do you need?
+      </h2>
+      <p className="mt-1 text-sm text-[var(--color-neutral-600)]">
         Start with your target — we&apos;ll show what to earn and which shifts close the gap.
       </p>
-      <div className="mt-3">
-        <GoalFormFields
-          key={`${workerId}-${formAmount}-${formDate}-${editing}`}
-          workerId={workerId}
-          demoToday={demoToday}
-          initialAmount={formAmount}
-          initialDate={formDate}
-          onDone={() => setEditing(false)}
-        />
-      </div>
+      <GoalFormFields
+        key={`${workerId}-${formAmount}-${formDate}-${editing}`}
+        workerId={workerId}
+        demoToday={demoToday}
+        initialAmount={formAmount}
+        initialDate={formDate}
+        onDone={() => setEditing(false)}
+      />
     </section>
   );
 }
