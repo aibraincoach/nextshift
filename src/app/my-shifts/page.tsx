@@ -2,14 +2,22 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { CalendarDays, Store } from "lucide-react";
 import { useAppData } from "@/lib/data/useAppData";
 import { useDemoState } from "@/lib/storage/demoState";
 import { fmtDate, fmtHour, fmtMoney, opportunityDate, releaseImpact } from "@/lib/engine/plan";
 import { ReleaseShiftDialog } from "@/components/marketplace/ReleaseShiftDialog";
-import { WorkerSwitcher } from "@/components/shared/WorkerSwitcher";
 import type { AssignedShift } from "@/types";
 
+function SectionKicker({ children }: { children: React.ReactNode }) {
+  return (
+    <h2
+      className="px-5 text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent-700)]"
+      style={{ fontWeight: 800 }}
+    >
+      {children}
+    </h2>
+  );
+}
 
 export default function MyShiftsPage() {
   const { loading, error, opportunities, financials, demoToday, planOptions } = useAppData();
@@ -48,52 +56,73 @@ export default function MyShiftsPage() {
   }, [releasing, financials, demoToday, planOptions]);
 
   if (loading) {
-    return <p className="py-16 text-center text-sm text-zinc-500">Loading your shifts…</p>;
+    return <p className="px-5 py-16 text-center text-sm text-muted">Loading your shifts…</p>;
   }
   if (error) {
-    return <p className="py-16 text-center text-sm text-rose-400">Something went wrong: {error}</p>;
+    return (
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
+        Something went wrong: {error}
+      </p>
+    );
   }
   if (!financials) {
-    return <p className="py-16 text-center text-sm text-zinc-500">No worker selected.</p>;
+    return <p className="px-5 py-16 text-center text-sm text-muted">No worker selected.</p>;
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-lg font-bold text-zinc-100">My shifts</h1>
-        <p className="text-xs text-zinc-500">Assigned, claimed, and released shifts.</p>
-      </div>
+    <div className="pb-2">
+      <section className="px-5 py-5">
+        <h1
+          className="text-[28px] leading-none tracking-tight text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          My shifts
+        </h1>
+        <p className="mt-2 text-sm text-muted">Assigned, claimed, and released shifts.</p>
+      </section>
 
-      <WorkerSwitcher />
+      <hr className="section-rule" />
 
-      {/* Assigned */}
-      <section className="space-y-2">
-        <h2 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-200">
-          <CalendarDays className="h-4 w-4 text-zinc-500" /> Assigned shifts
-        </h2>
+      <section className="py-4">
+        <SectionKicker>Assigned</SectionKicker>
         {assigned.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-zinc-800 p-4 text-center text-xs text-zinc-500">
-            No upcoming assigned shifts.
+          <p className="px-5 py-6 text-center text-xs text-muted">
+            No upcoming assigned shifts.{" "}
+            <Link href="/marketplace" className="text-[var(--color-accent-700)]">
+              Find work →
+            </Link>
           </p>
         ) : (
           assigned.map((s) => (
-            <div key={s.id} className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+            <div
+              key={s.id}
+              className="border-b-2 border-[var(--color-divider)] px-5 py-4"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-sm font-semibold text-zinc-100">{s.role}</div>
-                  <div className="text-xs text-zinc-400">{s.employerName}</div>
-                  <div className="mt-1 text-xs text-zinc-400">
-                    {fmtDate(s.date)} · {fmtHour(s.startHour)}–{fmtHour(s.endHour)}
+                  <div
+                    className="text-[17px] leading-tight text-[var(--color-text)]"
+                    style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+                  >
+                    {s.role}
                   </div>
+                  <p className="mt-1 text-xs text-muted">
+                    {s.employerName} · {fmtDate(s.date)} · {fmtHour(s.startHour)}–
+                    {fmtHour(s.endHour)}
+                  </p>
                 </div>
-                <div className="text-right text-sm font-bold tabular-nums text-zinc-100">
+                <div
+                  className="text-right text-[17px] tabular-nums text-[var(--color-text)]"
+                  style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+                >
                   {fmtMoney(s.estimatedNetCad)}
-                  <div className="text-[10px] font-normal text-zinc-500">est. net</div>
+                  <div className="text-[10px] font-normal text-muted">est. net</div>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setReleasing(s)}
-                className="mt-3 w-full rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:border-amber-600 hover:text-amber-300"
+                className="btn btn-secondary btn-block"
               >
                 Release to marketplace
               </button>
@@ -102,47 +131,51 @@ export default function MyShiftsPage() {
         )}
       </section>
 
-      {/* Claimed */}
-      <section className="space-y-2">
-        <h2 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-200">
-          <CalendarDays className="h-4 w-4 text-emerald-500" /> Claimed opportunities
-        </h2>
+      <hr className="section-rule" />
+
+      <section className="py-4">
+        <SectionKicker>Claimed</SectionKicker>
         {claimed.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-zinc-800 p-4 text-center text-xs text-zinc-500">
+          <p className="px-5 py-6 text-center text-xs text-muted">
             Nothing claimed yet.{" "}
-            <Link href="/marketplace" className="text-emerald-400 hover:underline">
-              Find work
+            <Link href="/marketplace" className="text-[var(--color-accent-700)]">
+              Find work →
             </Link>
           </p>
         ) : (
           claimed.map((o) => (
-            <div key={o.id} className="rounded-xl border border-emerald-900/60 bg-zinc-900/60 p-4">
+            <div
+              key={o.id}
+              className="border-b-2 border-[var(--color-divider)] px-5 py-4"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <Link
                     href={`/marketplace/${o.id}`}
-                    className="text-sm font-semibold text-zinc-100 hover:underline"
+                    className="text-[17px] leading-tight text-[var(--color-text)] hover:text-[var(--color-accent-700)]"
+                    style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
                   >
                     {o.role}
                   </Link>
-                  <div className="text-xs text-zinc-400">{o.employerName}</div>
-                  <div className="mt-1 text-xs text-zinc-400">
-                    {fmtDate(opportunityDate(o, demoToday))}
-                  </div>
-                  <div className="mt-1 text-[11px] font-medium text-emerald-400">
-                    Pending employer approval
-                  </div>
+                  <p className="mt-1 text-xs text-muted">
+                    {o.employerName} · {fmtDate(opportunityDate(o, demoToday))}
+                  </p>
+                  <span className="tag tag-outline mt-2">Pending employer approval</span>
                 </div>
-                <div className="text-right text-sm font-bold tabular-nums text-zinc-100">
+                <div
+                  className="text-right text-[17px] tabular-nums text-[var(--color-text)]"
+                  style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+                >
                   {o.type === "job" && o.weeklyNetCad != null
                     ? `${fmtMoney(o.weeklyNetCad)}/wk`
                     : fmtMoney(o.estimatedNetCad)}
-                  <div className="text-[10px] font-normal text-zinc-500">est. net</div>
+                  <div className="text-[10px] font-normal text-muted">est. net</div>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => unclaim(o.id)}
-                className="mt-3 w-full rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200"
+                className="btn btn-secondary btn-block"
               >
                 Cancel claim
               </button>
@@ -151,33 +184,39 @@ export default function MyShiftsPage() {
         )}
       </section>
 
-      {/* Released */}
-      <section className="space-y-2">
-        <h2 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-200">
-          <Store className="h-4 w-4 text-zinc-500" /> Released shifts
-        </h2>
+      <hr className="section-rule" />
+
+      <section className="py-4">
+        <SectionKicker>Released</SectionKicker>
         {released.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-zinc-800 p-4 text-center text-xs text-zinc-500">
-            You haven&apos;t released any shifts.
+          <p className="px-5 py-6 text-center text-xs text-muted">
+            You haven&apos;t released any shifts.{" "}
+            <Link href="/marketplace" className="text-[var(--color-accent-700)]">
+              Find work →
+            </Link>
           </p>
         ) : (
           released.map((s) => (
-            <div key={s.id} className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 opacity-90">
+            <div
+              key={s.id}
+              className="border-b-2 border-[var(--color-divider)] px-5 py-4 opacity-80"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-sm font-semibold text-zinc-300">{s.role}</div>
-                  <div className="text-xs text-zinc-500">{s.employerName}</div>
-                  <div className="mt-1 text-xs text-zinc-500">
-                    {fmtDate(s.date)} · {fmtHour(s.startHour)}–{fmtHour(s.endHour)}
+                  <div
+                    className="text-[17px] leading-tight text-[var(--color-text)]"
+                    style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+                  >
+                    {s.role}
                   </div>
+                  <p className="mt-1 text-xs text-muted">
+                    {s.employerName} · {fmtDate(s.date)} · {fmtHour(s.startHour)}–
+                    {fmtHour(s.endHour)}
+                  </p>
                 </div>
-                <span className="shrink-0 rounded-full bg-zinc-800 px-2 py-0.5 text-[11px] font-medium text-zinc-300">
-                  In marketplace
-                </span>
+                <span className="tag tag-neutral shrink-0">In marketplace</span>
               </div>
-              <p className="mt-2 text-[11px] text-zinc-500">
-                Visible to coworkers under Shift swaps.
-              </p>
+              <p className="mt-2 text-[11px] text-muted">Visible to coworkers under Swaps.</p>
             </div>
           ))
         )}

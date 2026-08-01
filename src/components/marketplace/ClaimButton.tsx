@@ -9,14 +9,17 @@ export function ClaimButton({ opportunityId }: { opportunityId: string }) {
 
   if (claimed) {
     return (
-      <div className="space-y-2">
-        <div className="flex items-center justify-center gap-2 rounded-xl border border-emerald-700/60 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300">
-          <CheckCircle2 className="h-4 w-4" />
-          Claimed — pending employer approval
+      <div>
+        <div className="flex items-center gap-2 border-2 border-[var(--color-divider)] bg-[var(--color-surface)] px-4 py-3 text-sm">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--color-accent-700)]" />
+          <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}>
+            Claimed — pending employer approval
+          </span>
         </div>
         <button
+          type="button"
           onClick={() => unclaim(opportunityId)}
-          className="w-full rounded-xl border border-zinc-700 px-4 py-2 text-xs font-medium text-zinc-400 transition hover:border-zinc-500 hover:text-zinc-200"
+          className="btn btn-secondary btn-block"
         >
           Cancel claim
         </button>
@@ -25,10 +28,7 @@ export function ClaimButton({ opportunityId }: { opportunityId: string }) {
   }
 
   return (
-    <button
-      onClick={() => claim(opportunityId)}
-      className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-400"
-    >
+    <button type="button" onClick={() => claim(opportunityId)} className="btn btn-primary btn-block">
       Claim this opportunity
     </button>
   );

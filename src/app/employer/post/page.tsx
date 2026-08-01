@@ -8,11 +8,11 @@ export default function EmployerPostPage() {
   const { loading, error, data, demoToday } = useAppData();
 
   if (loading) {
-    return <p className="py-16 text-center text-sm text-zinc-500">Loading…</p>;
+    return <p className="px-5 py-16 text-center text-sm text-muted">Loading…</p>;
   }
   if (error || !data) {
     return (
-      <p className="py-16 text-center text-sm text-amber-400">
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
         Could not load data. {error ?? ""}
       </p>
     );

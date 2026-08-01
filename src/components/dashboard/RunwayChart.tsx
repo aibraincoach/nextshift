@@ -13,6 +13,13 @@ import {
 import type { DayProjection } from "@/types";
 import { fmtDate, fmtMoney } from "@/lib/engine/plan";
 
+/** Read Modernist tokens so the chart cannot drift from the design system. */
+function cssVar(name: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+
 export function RunwayChart({
   projection,
   bufferTargetCad,
@@ -25,33 +32,42 @@ export function RunwayChart({
     label: fmtDate(d.date),
   }));
 
+  const ink = cssVar("--color-text", "#201e1d");
+  const accent = cssVar("--color-accent", "#ec3013");
+  const neutral200 = cssVar("--color-neutral-200", "#eae7e7");
+  const neutral500 = cssVar("--color-neutral-500", "#9b9797");
+  const neutral600 = cssVar("--color-neutral-600", "#7d7979");
+  const surface = cssVar("--color-surface", "#eae9e9");
+  const divider = cssVar("--color-divider", "rgba(32,30,29,0.4)");
+
   return (
-    <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
-      <div className="mb-2 flex items-baseline justify-between">
-        <h2 className="text-sm font-semibold text-zinc-200">{projection.length}-day runway</h2>
-        <span className="text-[11px] text-zinc-500">
-          Buffer {fmtMoney(bufferTargetCad)}
-        </span>
-      </div>
-      <div className="h-[180px] w-full">
+    <section className="px-5 py-5">
+      <h2
+        className="text-base text-[var(--color-text)]"
+        style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+      >
+        {projection.length}-day runway
+      </h2>
+
+      <div className="mt-4 h-[180px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="runwayFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#34d399" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
+                <stop offset="0%" stopColor={neutral200} stopOpacity={0.9} />
+                <stop offset="100%" stopColor={neutral200} stopOpacity={0.2} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="#27272a" strokeDasharray="3 3" vertical={false} />
+            <CartesianGrid stroke={neutral200} strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fill: "#71717a", fontSize: 10 }}
+              tick={{ fill: neutral600, fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               interval={0}
             />
             <YAxis
-              tick={{ fill: "#71717a", fontSize: 10 }}
+              tick={{ fill: neutral600, fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               width={44}
@@ -59,30 +75,42 @@ export function RunwayChart({
             />
             <Tooltip
               contentStyle={{
-                background: "#18181b",
-                border: "1px solid #3f3f46",
-                borderRadius: 8,
+                background: surface,
+                border: `1px solid ${divider}`,
+                borderRadius: 0,
                 fontSize: 12,
+                color: ink,
               }}
-              labelStyle={{ color: "#a1a1aa" }}
+              labelStyle={{ color: neutral500 }}
               formatter={(value) => [fmtMoney(Number(value ?? 0)), "Balance"]}
             />
             <ReferenceLine
               y={bufferTargetCad}
-              stroke="#fbbf24"
+              stroke={accent}
               strokeDasharray="4 4"
               strokeWidth={1.5}
             />
             <Area
               type="monotone"
               dataKey="endingBalanceCad"
-              stroke="#34d399"
+              stroke={ink}
               strokeWidth={2}
               fill="url(#runwayFill)"
               isAnimationActive={false}
             />
           </AreaChart>
         </ResponsiveContainer>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-4 text-[11px] text-[var(--color-neutral-600)]">
+        <span className="inline-flex items-center gap-2">
+          <span className="inline-block h-0.5 w-5 bg-[var(--color-text)]" />
+          Balance
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="inline-block h-0 w-5 border-t-2 border-dashed border-[var(--color-accent)]" />
+          Buffer {fmtMoney(bufferTargetCad)}
+        </span>
       </div>
     </section>
   );

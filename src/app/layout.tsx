@@ -1,17 +1,15 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 import { AppDataProvider } from "@/lib/data/useAppData";
-import { BottomNav, TopBar } from "@/components/shared/Nav";
+import { BottomNav, DemoStrip, TopBar } from "@/components/shared/Nav";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivo = Archivo({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "600", "800"],
+  variable: "--font-archivo",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,15 +24,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full bg-zinc-950 text-zinc-100">
+    <html lang="en" className={`${archivo.variable} h-full`}>
+      <body
+        className="min-h-full"
+        style={
+          {
+            ["--font-heading"]: "var(--font-archivo), system-ui, sans-serif",
+            ["--font-body"]: "var(--font-archivo), system-ui, sans-serif",
+          } as CSSProperties
+        }
+      >
         <AppDataProvider>
-          <TopBar />
-          <main className="mx-auto w-full max-w-md px-4 pb-24 pt-4">{children}</main>
-          <BottomNav />
+          <div className="mx-auto flex min-h-full w-full max-w-md flex-col bg-[var(--color-bg)]">
+            <TopBar />
+            <DemoStrip />
+            <main
+              className="flex-1"
+              style={{ paddingBottom: "calc(6rem + env(safe-area-inset-bottom, 0px))" }}
+            >
+              {children}
+            </main>
+            <BottomNav />
+          </div>
         </AppDataProvider>
       </body>
     </html>

@@ -6,13 +6,12 @@ import { useDemoState } from "@/lib/storage/demoState";
 import { scoreOpportunity } from "@/lib/engine/match";
 import { buildCashPlan, fmtDate, fmtMoney, opportunityImpact } from "@/lib/engine/plan";
 import { OpportunityCard } from "@/components/marketplace/OpportunityCard";
-import { WorkerSwitcher } from "@/components/shared/WorkerSwitcher";
 import type { Opportunity } from "@/types";
 
 const TABS: { key: Opportunity["type"]; label: string }[] = [
   { key: "shift", label: "Shifts" },
   { key: "job", label: "Jobs" },
-  { key: "released-shift", label: "Shift swaps" },
+  { key: "released-shift", label: "Swaps" },
 ];
 
 const EMPTY_COPY: Record<Opportunity["type"], string> = {
@@ -52,49 +51,67 @@ export default function MarketplacePage() {
   }, [opportunities, worker, financials, demoToday, planOptions, tab, state.claimedOpportunityIds]);
 
   if (loading) {
-    return <p className="py-16 text-center text-sm text-zinc-500">Loading marketplace…</p>;
+    return (
+      <p className="px-5 py-16 text-center text-sm text-muted">Loading marketplace…</p>
+    );
   }
   if (error) {
-    return <p className="py-16 text-center text-sm text-rose-400">Something went wrong: {error}</p>;
+    return (
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
+        Something went wrong: {error}
+      </p>
+    );
   }
   if (!worker || !financials) {
-    return <p className="py-16 text-center text-sm text-zinc-500">No worker selected.</p>;
+    return (
+      <p className="px-5 py-16 text-center text-sm text-muted">No worker selected.</p>
+    );
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-lg font-bold text-zinc-100">Find work</h1>
-        <p className="text-xs text-zinc-500">Ranked by how well each one improves your runway.</p>
-      </div>
-
-      <WorkerSwitcher />
+    <div className="pb-2">
+      <section className="px-5 py-5">
+        <h1
+          className="text-[28px] leading-none tracking-tight text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Find work
+        </h1>
+        <p className="mt-2 text-sm text-muted">
+          Ranked by how well each one improves your runway.
+        </p>
+      </section>
 
       {plan?.goal && plan.goal.shortfallCad > 0 ? (
-        <p className="rounded-lg border border-amber-800/50 bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-200">
-          You need {fmtMoney(plan.goal.shortfallCad)} by {fmtDate(plan.goal.byDate)} — showing work
-          that pays out in time.
-        </p>
+        <div className="mx-5 mb-4 border-2 border-[var(--color-divider)] bg-[var(--color-surface)] px-4 py-3 text-sm">
+          You need{" "}
+          <span className="tabular-nums font-semibold">{fmtMoney(plan.goal.shortfallCad)}</span> by{" "}
+          {fmtDate(plan.goal.byDate)} — showing work that pays out in time.
+        </div>
       ) : null}
 
-      <div className="flex rounded-xl border border-zinc-800 bg-zinc-900/60 p-1">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`flex-1 rounded-lg px-2 py-1.5 text-xs font-semibold transition ${
-              tab === t.key ? "bg-zinc-700 text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      <div className="px-5 pb-4">
+        <div className="seg w-full">
+          {TABS.map((t) => (
+            <label key={t.key} className="seg-opt flex-1 justify-center">
+              <input
+                type="radio"
+                name="marketplace-tab"
+                checked={tab === t.key}
+                onChange={() => setTab(t.key)}
+              />
+              {t.label}
+            </label>
+          ))}
+        </div>
       </div>
 
+      <hr className="section-rule" />
+
       {scored.length === 0 ? (
-        <p className="py-12 text-center text-sm text-zinc-500">{EMPTY_COPY[tab]}</p>
+        <p className="px-5 py-12 text-center text-sm text-muted">{EMPTY_COPY[tab]}</p>
       ) : (
-        <div className="space-y-3">
+        <div>
           {scored.map(({ opp, score, impact, claimed }) => (
             <OpportunityCard
               key={opp.id}

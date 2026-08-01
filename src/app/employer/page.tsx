@@ -11,11 +11,11 @@ export default function EmployerPage() {
   const { state } = useDemoState();
 
   if (loading) {
-    return <p className="py-16 text-center text-sm text-zinc-500">Loading employer dashboard…</p>;
+    return <p className="px-5 py-16 text-center text-sm text-muted">Loading employer dashboard…</p>;
   }
   if (error || !data) {
     return (
-      <p className="py-16 text-center text-sm text-amber-400">
+      <p className="px-5 py-16 text-center text-sm text-[var(--color-accent-700)]">
         Could not load data. {error ?? ""}
       </p>
     );

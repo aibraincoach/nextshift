@@ -11,19 +11,35 @@ export function UpcomingObligations({
   const next = upcoming.slice(0, 4);
 
   return (
-    <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-      <h2 className="text-sm font-semibold text-zinc-200">Upcoming obligations</h2>
+    <section className="border-t-2 border-[var(--color-divider)] px-5 py-5">
+      <h2
+        className="text-base text-[var(--color-text)]"
+        style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+      >
+        Upcoming obligations
+      </h2>
+
       {next.length === 0 ? (
-        <p className="mt-3 text-sm text-zinc-500">No obligations in the next 30 days.</p>
+        <p className="mt-3 text-sm text-[var(--color-neutral-600)]">
+          No obligations in the next 30 days.
+        </p>
       ) : (
-        <ul className="mt-3 divide-y divide-zinc-800">
+        <ul className="mt-3">
           {next.map((o, i) => (
-            <li key={`${o.name}-${o.date}-${i}`} className="flex items-center justify-between py-2.5">
+            <li
+              key={`${o.name}-${o.date}-${i}`}
+              className="flex items-center justify-between border-t border-[var(--color-divider)] py-3 first:border-t-0"
+            >
               <div>
-                <div className="text-sm font-medium text-zinc-100">{o.name}</div>
-                <div className="text-xs text-zinc-500">{fmtDate(o.date)}</div>
+                <div className="text-sm text-[var(--color-text)]" style={{ fontWeight: 600 }}>
+                  {o.name}
+                </div>
+                <div className="text-xs text-[var(--color-neutral-600)]">{fmtDate(o.date)}</div>
               </div>
-              <div className="text-sm font-semibold tabular-nums text-zinc-200">
+              <div
+                className="text-sm tabular-nums text-[var(--color-text)]"
+                style={{ fontWeight: 800 }}
+              >
                 {fmtMoney(o.amountCad)}
               </div>
             </li>

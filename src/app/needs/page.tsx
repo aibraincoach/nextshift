@@ -4,13 +4,46 @@ import Link from "next/link";
 import { useState } from "react";
 import { EmptyWorker, ErrorPlan, LoadingPlan } from "@/components/dashboard/PageStatus";
 import { GoalFormFields, computeGoalPrefill } from "@/components/dashboard/GoalSetter";
-import { DemoResetButton } from "@/components/shared/DemoResetButton";
-import { WorkerSwitcher } from "@/components/shared/WorkerSwitcher";
 import { useAppData } from "@/lib/data/useAppData";
 import { buildCashPlan, fmtDate, fmtMoney } from "@/lib/engine/plan";
 import { useDemoState } from "@/lib/storage/demoState";
 
 const BUFFER_PRESETS = [1, 2, 3, 5];
+
+function SquareToggle({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={() => onChange(!checked)}
+      className="relative flex h-11 w-11 shrink-0 items-center justify-center border-0 bg-transparent p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+    >
+      {/* Visual switch matches mock (22×40); hit target is 44×44 */}
+      <span
+        className="relative block h-[22px] w-10 transition-colors"
+        style={{
+          background: checked ? "var(--color-accent)" : "var(--color-neutral-300)",
+        }}
+        aria-hidden
+      >
+        <span
+          className="absolute top-[3px] h-4 w-4 bg-[var(--color-bg)] transition-all"
+          style={{ left: checked ? "21px" : "3px" }}
+        />
+      </span>
+    </button>
+  );
+}
 
 export default function NeedsPage() {
   const { loading, error, worker, financials, demoToday, planOptions } = useAppData();
@@ -23,8 +56,6 @@ export default function NeedsPage() {
   const hasSpendOverride = needs.dailySpendCad != null;
   const hasIncomeOverride = needs.expectedDailyNetCad != null;
 
-  // Local text kept only while the user is editing for the current worker, so
-  // typing isn't fought by the store round-trip. Falls back to the stored value.
   const [edit, setEdit] = useState<{ workerId: string; text: string } | null>(null);
   const [incomeEdit, setIncomeEdit] = useState<{ workerId: string; text: string } | null>(null);
   const spendText =
@@ -38,11 +69,7 @@ export default function NeedsPage() {
   if (error) return <ErrorPlan message={error} />;
   if (!worker || !financials || !workerId) {
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between gap-2">
-          <WorkerSwitcher />
-          <DemoResetButton />
-        </div>
+      <div className="px-5 py-5">
         <EmptyWorker />
       </div>
     );
@@ -80,23 +107,30 @@ export default function NeedsPage() {
   };
 
   return (
-    <div className="space-y-5 pb-36">
-      <div className="flex items-start justify-between gap-2">
-        <WorkerSwitcher />
-        <DemoResetButton />
-      </div>
-
-      <div>
-        <h1 className="text-xl font-bold text-zinc-50">Set your needs</h1>
-        <p className="mt-1 text-sm text-zinc-400">
+    <div className="pb-44">
+      <header className="px-5 pt-5">
+        <h1
+          className="text-[28px] leading-tight tracking-tight text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Set your needs
+        </h1>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-neutral-700)]">
           Tell us what your week actually costs. Everything else — your plan and matched work —
           starts from here.
         </p>
-      </div>
+      </header>
 
-      <section className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-        <h2 className="text-sm font-semibold text-emerald-300">Your goal</h2>
-        <p className="mt-1 text-xs text-zinc-500">
+      <hr className="section-rule my-5" />
+
+      <section className="px-5">
+        <h2
+          className="text-base text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Your goal
+        </h2>
+        <p className="mt-1 text-xs text-[var(--color-neutral-600)]">
           What do you need by when? Prefilled from your history — edit if it&apos;s wrong.
         </p>
         <div className="mt-3">
@@ -108,27 +142,34 @@ export default function NeedsPage() {
             initialDate={hasGoal ? needs.goalByDate! : goalPrefill.byDate}
           />
         </div>
-        {hasGoal && (
+        {hasGoal ? (
           <button
             type="button"
             onClick={() => setNeeds(workerId, { goalAmountCad: undefined, goalByDate: undefined })}
-            className="mt-3 rounded-lg border border-zinc-800 px-3 py-2 text-xs font-medium text-zinc-400 hover:border-zinc-700 hover:text-zinc-300"
+            className="btn btn-secondary mt-3"
           >
             Clear goal
           </button>
-        )}
+        ) : null}
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-        <h2 className="text-sm font-semibold text-zinc-200">Expected daily income</h2>
-        <p className="mt-1 text-xs text-zinc-500">
+      <hr className="section-rule my-5" />
+
+      <section className="px-5">
+        <h2
+          className="text-base text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Expected daily income
+        </h2>
+        <p className="mt-1 text-xs text-[var(--color-neutral-600)]">
           {hasIncomeOverride
             ? "You've set your own number."
             : "Estimated from your history — edit if it's wrong."}
         </p>
         <div className="mt-3 flex items-center gap-2">
           <div className="relative flex-1">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">
+            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-sm text-[var(--color-neutral-600)]">
               $
             </span>
             <input
@@ -138,62 +179,69 @@ export default function NeedsPage() {
               value={incomeText}
               onChange={(e) => onIncomeChange(e.target.value)}
               aria-label="Expected daily income in CAD"
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2.5 pl-7 pr-3 text-sm font-semibold tabular-nums text-zinc-100 outline-none focus:border-emerald-500/60"
+              className="input pl-7 font-semibold tabular-nums"
             />
           </div>
-          <span className="text-xs text-zinc-500">/ day</span>
-          {hasIncomeOverride && (
-            <button
-              type="button"
-              onClick={() => {
-                setIncomeEdit(null);
-                setNeeds(workerId, { expectedDailyNetCad: undefined });
-              }}
-              className="rounded-lg border border-zinc-800 px-3 py-2.5 text-xs font-medium text-zinc-300 hover:border-zinc-700"
-            >
-              Use estimate ({fmtMoney(incomeEstimate)})
-            </button>
-          )}
+          <span className="text-xs text-[var(--color-neutral-600)]">/ day</span>
         </div>
+        {hasIncomeOverride ? (
+          <button
+            type="button"
+            onClick={() => {
+              setIncomeEdit(null);
+              setNeeds(workerId, { expectedDailyNetCad: undefined });
+            }}
+            className="btn btn-secondary mt-2"
+          >
+            Use estimate ({fmtMoney(incomeEstimate)})
+          </button>
+        ) : null}
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-        <h2 className="text-sm font-semibold text-zinc-200">Safety buffer</h2>
-        <p className="mt-1 text-xs text-zinc-500">
+      <hr className="section-rule my-5" />
+
+      <section className="px-5">
+        <h2
+          className="text-base text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Safety buffer
+        </h2>
+        <p className="mt-1 text-xs text-[var(--color-neutral-600)]">
           How many days of everyday spending should always stay in reserve?
         </p>
-        <div className="mt-3 grid grid-cols-4 gap-2">
-          {BUFFER_PRESETS.map((d) => {
-            const active = bufferDays === d;
-            return (
-              <button
-                key={d}
-                type="button"
-                onClick={() => setNeeds(workerId, { bufferDays: d })}
-                aria-pressed={active}
-                className={`rounded-lg border px-2 py-2.5 text-sm font-semibold transition-colors ${
-                  active
-                    ? "border-emerald-500/60 bg-emerald-500/10 text-emerald-300"
-                    : "border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700"
-                }`}
-              >
-                {d} {d === 1 ? "day" : "days"}
-              </button>
-            );
-          })}
+        <div className="seg mt-3">
+          {BUFFER_PRESETS.map((d) => (
+            <label key={d} className="seg-opt">
+              <input
+                type="radio"
+                name="bufferDays"
+                checked={bufferDays === d}
+                onChange={() => setNeeds(workerId, { bufferDays: d })}
+              />
+              {d} {d === 1 ? "day" : "days"}
+            </label>
+          ))}
         </div>
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-        <h2 className="text-sm font-semibold text-zinc-200">Daily spending</h2>
-        <p className="mt-1 text-xs text-zinc-500">
+      <hr className="section-rule my-5" />
+
+      <section className="px-5">
+        <h2
+          className="text-base text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Daily spending
+        </h2>
+        <p className="mt-1 text-xs text-[var(--color-neutral-600)]">
           {hasSpendOverride
             ? "You've set your own number."
             : "Estimated from your last 28 days."}
         </p>
         <div className="mt-3 flex items-center gap-2">
           <div className="relative flex-1">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">
+            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-sm text-[var(--color-neutral-600)]">
               $
             </span>
             <input
@@ -203,60 +251,59 @@ export default function NeedsPage() {
               value={spendText}
               onChange={(e) => onSpendChange(e.target.value)}
               aria-label="Daily spending in CAD"
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2.5 pl-7 pr-3 text-sm font-semibold tabular-nums text-zinc-100 outline-none focus:border-emerald-500/60"
+              className="input pl-7 font-semibold tabular-nums"
             />
           </div>
-          <span className="text-xs text-zinc-500">/ day</span>
-          {hasSpendOverride && (
-            <button
-              type="button"
-              onClick={() => {
-                setEdit(null);
-                setNeeds(workerId, { dailySpendCad: undefined });
-              }}
-              className="rounded-lg border border-zinc-800 px-3 py-2.5 text-xs font-medium text-zinc-300 hover:border-zinc-700"
-            >
-              Use estimate ({fmtMoney(estimate)})
-            </button>
-          )}
+          <span className="text-xs text-[var(--color-neutral-600)]">/ day</span>
         </div>
+        {hasSpendOverride ? (
+          <button
+            type="button"
+            onClick={() => {
+              setEdit(null);
+              setNeeds(workerId, { dailySpendCad: undefined });
+            }}
+            className="btn btn-secondary mt-2"
+          >
+            Use estimate ({fmtMoney(estimate)})
+          </button>
+        ) : null}
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-        <h2 className="text-sm font-semibold text-zinc-200">Bills &amp; obligations</h2>
-        <p className="mt-1 text-xs text-zinc-500">
+      <hr className="section-rule my-5" />
+
+      <section className="px-5">
+        <h2
+          className="text-base text-[var(--color-text)]"
+          style={{ fontFamily: "var(--font-heading)", fontWeight: 800 }}
+        >
+          Bills &amp; obligations
+        </h2>
+        <p className="mt-1 text-xs text-[var(--color-neutral-600)]">
           Toggle off anything that&apos;s paused or not yours — it&apos;s removed from your plan.
         </p>
         {financials.obligations.length === 0 ? (
-          <p className="mt-3 text-sm text-zinc-500">No obligations on file.</p>
+          <p className="mt-3 text-sm text-[var(--color-neutral-600)]">No obligations on file.</p>
         ) : (
-          <ul className="mt-3 divide-y divide-zinc-800">
+          <ul className="mt-3">
             {financials.obligations.map((o) => {
               const enabled = !excluded.includes(o.obligationId);
               return (
-                <li key={o.obligationId} className="flex items-center justify-between gap-3 py-3">
+                <li
+                  key={o.obligationId}
+                  className="flex items-center justify-between gap-3 border-b border-[var(--color-divider)] py-3 last:border-0"
+                >
                   <div className={enabled ? "" : "opacity-50"}>
-                    <div className="text-sm font-medium text-zinc-100">{o.name}</div>
-                    <div className="text-xs text-zinc-500">
+                    <div className="text-sm font-medium text-[var(--color-text)]">{o.name}</div>
+                    <div className="text-xs text-[var(--color-neutral-600)]">
                       {fmtMoney(o.amountCad)} · {o.frequency} · due day {o.dueDayOfMonth}
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={enabled}
-                    aria-label={`${o.name} ${enabled ? "included" : "excluded"}`}
-                    onClick={() => toggleObligation(o.obligationId, !enabled)}
-                    className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-                      enabled ? "bg-emerald-500" : "bg-zinc-700"
-                    }`}
-                  >
-                    <span
-                      className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
-                        enabled ? "left-[22px]" : "left-0.5"
-                      }`}
-                    />
-                  </button>
+                  <SquareToggle
+                    checked={enabled}
+                    onChange={(next) => toggleObligation(o.obligationId, next)}
+                    label={`${o.name} ${enabled ? "included" : "excluded"}`}
+                  />
                 </li>
               );
             })}
@@ -264,38 +311,32 @@ export default function NeedsPage() {
         )}
       </section>
 
-      <div className="fixed inset-x-0 bottom-14 z-10 mx-auto max-w-md px-4 pb-2">
-        <div
-          className={`rounded-xl border p-4 shadow-lg backdrop-blur ${
-            hasGap
-              ? "border-amber-500/40 bg-amber-950/80"
-              : "border-emerald-500/40 bg-emerald-950/80"
-          }`}
-        >
+      <div
+        className="fixed inset-x-0 z-10 mx-auto max-w-md px-5"
+        style={{
+          // Sit above the tab bar (≈44px + 18px pad) and the device home indicator.
+          bottom: "calc(62px + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
+        <div className="border border-[var(--color-divider)] bg-[var(--color-surface)] p-4">
           {hasGap ? (
-            <p className="text-sm text-amber-200">
+            <p className="text-sm text-[var(--color-text)]">
               With these needs: short{" "}
               <span className="font-bold tabular-nums">{fmtMoney(plan.cashGapCad)}</span> on{" "}
               <span className="font-bold">{fmtDate(plan.gapDate!)}</span>
             </p>
           ) : (
-            <p className="text-sm text-emerald-200">
+            <p className="text-sm text-[var(--color-text)]">
               With these needs: covered through{" "}
               <span className="font-bold">{fmtDate(lastDay)}</span>
             </p>
           )}
           {hasGap ? (
-            <Link
-              href="/marketplace"
-              className="mt-3 block rounded-lg bg-amber-500 px-4 py-2.5 text-center text-sm font-semibold text-amber-950 hover:bg-amber-400"
-            >
+            <Link href="/marketplace" className="btn btn-primary btn-block no-underline">
               Find work that closes it
             </Link>
           ) : (
-            <Link
-              href="/plan"
-              className="mt-3 block rounded-lg border border-emerald-500/50 px-4 py-2.5 text-center text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10"
-            >
+            <Link href="/plan" className="btn btn-primary btn-block no-underline">
               View plan
             </Link>
           )}
