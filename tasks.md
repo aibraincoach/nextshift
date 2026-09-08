@@ -2,6 +2,12 @@
 
 Tick with a timestamp when done. Add discovered tasks under the right area.
 
+## CI audit and migration — 2026-09-08
+
+Actions is disabled. [CI_POLICY.md](CI_POLICY.md) records the owner ruling,
+repository evidence, retained checks and outstanding provider blockers. This
+entry does not mark unverified replacement checks as passed or completed.
+
 ## Foundation (done)
 - [x] Scaffold Next.js + deps (2026-07-29 19:15)
 - [x] Copy CSVs + BUILD_PLAN.md (2026-07-29 19:17)

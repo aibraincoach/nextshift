@@ -1,5 +1,11 @@
 # NextShift — Architecture and Vision
 
+## CI execution decision — 2026-09-08
+
+Actions is disabled. [CI_POLICY.md](CI_POLICY.md) records the owner ruling,
+repository evidence, retained checks and outstanding provider blockers. This
+entry does not mark unverified replacement checks as passed or completed.
+
 ## Vision
 NextShift turns a worker's real cash-flow gap into an actionable earnings plan, then matches the worker with shifts, jobs, and coworker-released shifts that close the gap. Budgeting is the calculation engine, not the product. See BUILD_PLAN.md for full product logic.
 
